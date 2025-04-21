@@ -1,0 +1,33 @@
+{
+  "name": "express-api",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/JuanJoseRodriguezdePraAviles/express-api#readme",
+  "bugs": {
+    "url": "https://github.com/JuanJoseRodriguezdePraAviles/express-api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuanJoseRodriguezdePraAviles/express-api.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.ts",
+  "scripts": {
+    "start": "node dist/index.ts",
+    "dev": "nodemon --watch src --ext ts --exec ts-node ./src/index.ts"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.14.1",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
