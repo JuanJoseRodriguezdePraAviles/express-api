@@ -1,0 +1,3 @@
+[{"id":"1","email":"example@email.com","date":"8/1/2023","customer_name":"Dyna Jumonet","customer_id":"1","phone":"963-783-6764","subject":"Phasellus sit amet erat. ","comment":"Lorem ipsum","archived":true},
+{"id":"2","email":"example@email.com","date":"9/9/2023","customer_name":"Emili Calvey","customer_id":"2","phone":"347-122-8309","subject":"Phasellus sit amet erat.","comment":"Lorem ipsum","archived":false},
+{"id":"3","email":"example@email.com","date":"2/17/2024","customer_name":"Enrika Gorst","customer_id":"3","phone":"435-329-1600","subject":"Nullam porttitor lacus at turpis.","comment":"Lorem ipsum","archived":true}]

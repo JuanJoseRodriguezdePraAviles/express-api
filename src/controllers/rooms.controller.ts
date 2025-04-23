@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
 import { Room } from '../interfaces/Room';
 import * as RoomService from '../services/rooms.service'
-import { validateRoom, validateRoomList } from '../validators/RoomValidator';
+import RoomValidator from '../validators/room.validator';
 
 let rooms: Room[] = [];
 
 export const getAllRoomsController = (_req: Request, res: Response): void => {
     const rooms = RoomService.getAllRooms();
-    const validatedRooms = validateRoomList(rooms);
+    const validatedRooms = RoomValidator.validateRoomList(rooms);
 
     if(!validatedRooms) {
-        res.status(500).json({ message: "Invalid room data format" });
+        res.status(500).json({ message: RoomValidator.getErrors().join('; ') });
         return;
     }
 
@@ -20,24 +20,24 @@ export const getAllRoomsController = (_req: Request, res: Response): void => {
 export const getRoomByIdController = (req: Request, res: Response): void => {
     const room = RoomService.getRoomById(req.params.id);
     if (!room) {
-        res.status(404).json({ message: 'Room not found' });
+        res.status(404).json({ message: RoomValidator.getErrors().join('; ') });
         return;
     }
 
-    const validatedRoom = validateRoom(room);
+    const validatedRoom = RoomValidator.validateRoom(room);
 
     if(!validatedRoom || validatedRoom.room_id !== req.params.id) {
-        res.status(400).json({ message: 'Invalid room data' });
+        res.status(400).json({ message: RoomValidator.getErrors().join('; ') });
         return;
     }
     res.json(validatedRoom);
 }
 
 export const createRoomController = (req: Request, res: Response): void => {
-    const validatedRoom = validateRoom(req.body);
+    const validatedRoom = RoomValidator.validateRoom(req.body);
 
-    if (!validateRoom) {
-        res.status(400).json({ message: "Invalid room format" });
+    if (!RoomValidator.validateRoom) {
+        res.status(400).json({ message: RoomValidator.getErrors().join('; ') });
         return;
     }
 
@@ -49,14 +49,14 @@ export const updateRoomController = (req: Request, res: Response): void => {
     const updatedRoom = RoomService.updateRoom(req.params.id, req.body)
 
     if (!updatedRoom) {
-        res.status(404).json({ message: 'Room not found' });
+        res.status(404).json({ message: RoomValidator.getErrors().join('; ') });
         return;
     }
 
-    const validatedRoom = validateRoom(updatedRoom);
+    const validatedRoom = RoomValidator.validateRoom(updatedRoom);
 
     if (!validatedRoom || validatedRoom.room_id !== req.params.id) {
-        res.status(400).json({ message: 'Invalid updated room data' });
+        res.status(400).json({ message: RoomValidator.getErrors().join('; ') });
         return;
     }
 
@@ -67,13 +67,13 @@ export const deleteRoomController = (req: Request, res: Response): void => {
     const deletedRoom = RoomService.deleteRoom(req.params.id);
 
     if (!deletedRoom){
-        res.status(404).json({ message: 'Room not found'});
+        res.status(404).json({ message: RoomValidator.getErrors().join('; ') });
         return;
     }
 
-    const isValid = validateRoom(deletedRoom);
+    const isValid = RoomValidator.validateRoom(deletedRoom);
     if (!isValid || deletedRoom.room_id !== req.params.id) {
-        res.status(400).json({ message: 'Deleted room data is invalid' });
+        res.status(400).json({ message: RoomValidator.getErrors().join('; ') });
         return;
     }
 
