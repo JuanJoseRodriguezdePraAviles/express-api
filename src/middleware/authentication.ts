@@ -1,0 +1,34 @@
+import jwt from 'jsonwebtoken'
+import 'dotenv/config'
+
+
+import { Request, Response } from 'express';
+
+export const loginController = (req: Request, res: Response): void => {
+    const { username, password } = req.body
+    console.log(username);
+    console.log(password);
+    if(username !== 'admin') {
+        res.status(403).json({ message: "Ivalid username"})
+    }
+    if(password !== 'admin') {
+        res.status(403).json({ message: "Ivalid password"})
+    }
+    console.log(process.env.SECRET_KEY);
+    const token = generateAccessToken(username);
+
+    res.status(200).send({
+        token: token,
+        loggedUserID: username
+    })
+
+}
+
+function generateAccessToken(username: string) {
+    const token = jwt.sign(
+        { id: username },
+        process.env.SECRET_KEY as string,
+        { expiresIn: '1y' }
+    )
+    return
+  }

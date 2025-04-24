@@ -14,6 +14,5 @@ router.get('/:id', getEmployeeByIdController);
 router.post('/', createEmployeeController);
 router.put('/:id', updateEmployeeController);
 router.delete('/:id', deleteEmployeeController);
-console.log("routes");
 
 export default router;
