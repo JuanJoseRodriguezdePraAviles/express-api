@@ -1,6 +1,6 @@
 import express from 'express';
 import roomsRouter from './routes/rooms.routes';
-import bookingsRouter from './routes/rooms.routes';
+import bookingsRouter from './routes/bookings.routes';
 import reviewsRouter from './routes/reviews.routes';
 import employeesRouter from './routes/employees.routes';
 import loginRouter from './routes/login.routes';

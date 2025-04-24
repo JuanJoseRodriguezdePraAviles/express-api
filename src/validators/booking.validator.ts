@@ -49,16 +49,15 @@ export default class BookingValidator {
             this.errors.push("Invalid booking client phone");
         }
 
-        if ('order_date' in booking && !(booking.order_date instanceof Date)) {
+        if ('order_date' in booking && !(new Date(booking.order_date) instanceof Date)) {
             this.errors.push("Invalid booking order date");
         }
-        if ('check_in_date' in booking && !(booking.check_in_date instanceof Date)) {
+        if ('check_in_date' in booking && !(new Date(booking.check_in_date) instanceof Date)) {
             this.errors.push("Invalid booking check in date");
         }
-        if ('check_out_date' in booking && !(booking.check_out_date instanceof Date)) {
+        if ('check_out_date' in booking && !(new Date(booking.check_out_date) instanceof Date)) {
             this.errors.push("Invalid booking check out date");
         }
-
         if ('status' in booking && typeof booking.status !== 'string') {
             this.errors.push("Invalid booking status");
         }
@@ -82,7 +81,7 @@ export default class BookingValidator {
             if (!validBooking) continue;
             validatedBookings.push(validBooking);
         }
-        return validatedBookings;
+        return validatedBookings.length === 0? false : validatedBookings;
     }
 
     public static getErrors = (): string[] => {

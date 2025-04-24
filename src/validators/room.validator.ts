@@ -65,7 +65,7 @@ export default class RoomValidator {
             if (!validRoom) continue;
             validatedRooms.push(validRoom);
         }
-        return validatedRooms;
+        return validatedRooms.length === 0? false : validatedRooms;
     }
 
     public static getErrors = (): string[] => {

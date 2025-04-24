@@ -51,7 +51,6 @@ export default class EmployeeValidator {
             if (!validEmployee) continue;
             validatedEmployees.push(validEmployee);
         }
-        console.log(validatedEmployees);
         return validatedEmployees.length === 0? false : validatedEmployees;
     }
 

@@ -5,16 +5,13 @@ import 'dotenv/config'
 import { Request, Response } from 'express';
 
 export const loginController = (req: Request, res: Response): void => {
-    const { username, password } = req.body
-    console.log(username);
-    console.log(password);
+    const { username, password } = req.body;
     if(username !== 'admin') {
         res.status(403).json({ message: "Ivalid username"})
     }
     if(password !== 'admin') {
         res.status(403).json({ message: "Ivalid password"})
     }
-    console.log(process.env.SECRET_KEY);
     const token = generateAccessToken(username);
 
     res.status(200).send({

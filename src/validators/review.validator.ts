@@ -51,7 +51,7 @@ export default class ReviewValidator {
             if (!validReview) continue;
             validatedReviews.push(validReview);
         }
-        return validatedReviews;
+        return validatedReviews.length === 0? false : validatedReviews;
     }
     
     public static getErrors = (): string[] => {

@@ -8,7 +8,6 @@ let employees: Employee[] = [];
 export const getAllEmployeesController = (_req: Request, res: Response): void => {
     const employees = EmployeeService.getAllEmployees();
     const validatedEmployees = EmployeeValidator.validateEmployeeList(employees);
-    console.log(validatedEmployees);
     if(!validatedEmployees) {
         res.status(500).json({ message: EmployeeValidator.getErrors().join('; ') });
         return;

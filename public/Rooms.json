@@ -1,19 +1,5 @@
 [
   {
-    "room_id": "2",
-    "room_type": "suite",
-    "room_floor": "5",
-    "status": "booked",
-    "description": "Descripción actualizada de la habitación",
-    "photos": [],
-    "offer": false,
-    "price": 150,
-    "discount": 10,
-    "cancellation_policy": "Estricta",
-    "room_amenities": [],
-    "room_name": "Habitación Deluxe Actualizada"
-  },
-  {
     "room_id": "3",
     "room_type": "single",
     "room_floor": "Floor A-1",
@@ -225,5 +211,19 @@
     "discount": 5,
     "cancellation_policy": "Flexible",
     "room_amenities": []
+  },
+  {
+    "room_id": "1745485451763",
+    "room_type": "suite",
+    "room_floor": "5",
+    "status": "booked",
+    "description": "Descripción actualizada de la habitación",
+    "photos": [],
+    "offer": false,
+    "price": 150,
+    "discount": 10,
+    "cancellation_policy": "Estricta",
+    "room_amenities": [],
+    "room_name": "Habitación Deluxe Actualizada"
   }
 ]
