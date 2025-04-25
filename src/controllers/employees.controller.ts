@@ -5,7 +5,7 @@ import EmployeeValidator from '../validators/employee.validator';
 
 let employees: Employee[] = [];
 
-export const getAllEmployeesController = (_req: Request, res: Response): void => {
+export const getAllEmployeesController = (req: Request, res: Response): void => {
     const employees = EmployeeService.getAllEmployees();
     const validatedEmployees = EmployeeValidator.validateEmployeeList(employees);
     if(!validatedEmployees) {

@@ -6,13 +6,14 @@ import {
     updateReviewController,
     deleteReviewController
 } from '../controllers/reviews.controller';
+import { authenticateToken } from '../middleware/auth.middleware';
 
 const router = Router();
 
-router.get('/', getAllReviewsController);
-router.get('/:id', getReviewByIdController);
-router.post('/', createReviewController);
-router.put('/:id', updateReviewController);
-router.delete('/:id', deleteReviewController);
+router.get('/', authenticateToken, getAllReviewsController);
+router.get('/:id', authenticateToken, getReviewByIdController);
+router.post('/', authenticateToken, createReviewController);
+router.put('/:id', authenticateToken, updateReviewController);
+router.delete('/:id', authenticateToken, deleteReviewController);
 
 export default router;

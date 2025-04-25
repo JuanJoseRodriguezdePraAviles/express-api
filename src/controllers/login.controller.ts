@@ -22,10 +22,9 @@ export const loginController = (req: Request, res: Response): void => {
 }
 
 function generateAccessToken(username: string) {
-    const token = jwt.sign(
+    return jwt.sign(
         { id: username },
         process.env.SECRET_KEY as string,
         { expiresIn: '1y' }
     )
-    return
   }

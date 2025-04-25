@@ -5,7 +5,7 @@ import RoomValidator from '../validators/room.validator';
 
 let rooms: Room[] = [];
 
-export const getAllRoomsController = (_req: Request, res: Response): void => {
+export const getAllRoomsController = (req: Request, res: Response): void => {
     const rooms = RoomService.getAllRooms();
     const validatedRooms = RoomValidator.validateRoomList(rooms);
 

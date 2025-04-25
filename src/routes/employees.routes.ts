@@ -6,13 +6,14 @@ import {
     updateEmployeeController,
     deleteEmployeeController
 } from '../controllers/employees.controller';
+import { authenticateToken } from '../middleware/auth.middleware';
 
 const router = Router();
 
-router.get('/', getAllEmployeesController);
-router.get('/:id', getEmployeeByIdController);
-router.post('/', createEmployeeController);
-router.put('/:id', updateEmployeeController);
-router.delete('/:id', deleteEmployeeController);
+router.get('/', authenticateToken, getAllEmployeesController);
+router.get('/:id', authenticateToken, getEmployeeByIdController);
+router.post('/', authenticateToken, createEmployeeController);
+router.put('/:id', authenticateToken, updateEmployeeController);
+router.delete('/:id', authenticateToken, deleteEmployeeController);
 
 export default router;

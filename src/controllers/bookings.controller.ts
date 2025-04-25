@@ -5,7 +5,7 @@ import BookingValidator from '../validators/booking.validator';
 
 let bookings: Booking[] = [];
 
-export const getAllBookingsController = (_req: Request, res: Response): void => {
+export const getAllBookingsController = (req: Request, res: Response): void => {
     const bookings = BookingService.getAllBookings();
     const validatedBookings = BookingValidator.validateBookingList(bookings);
 

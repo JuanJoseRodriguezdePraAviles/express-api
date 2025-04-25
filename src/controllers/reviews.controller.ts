@@ -5,7 +5,7 @@ import ReviewValidator from '../validators/review.validator';
 
 let reviews: Review[] = [];
 
-export const getAllReviewsController = (_req: Request, res: Response): void => {
+export const getAllReviewsController = (req: Request, res: Response): void => {
     const reviews = ReviewService.getAllReviews();
     const validatedReviews = ReviewValidator.validateReviewList(reviews);
 
