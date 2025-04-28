@@ -6,6 +6,7 @@ class BookingValidator {
 _a = BookingValidator;
 BookingValidator.errors = [];
 BookingValidator.validateBooking = (booking) => {
+    _a.errors = [];
     if (!booking || typeof booking !== 'object') {
         _a.errors.push("Invalid object booking");
     }
@@ -45,13 +46,13 @@ BookingValidator.validateBooking = (booking) => {
     if ('client_phone' in booking && typeof booking.client_phone !== 'string') {
         _a.errors.push("Invalid booking client phone");
     }
-    if ('order_date' in booking && !(booking.order_date instanceof Date)) {
+    if ('order_date' in booking && !(new Date(booking.order_date) instanceof Date)) {
         _a.errors.push("Invalid booking order date");
     }
-    if ('check_in_date' in booking && !(booking.check_in_date instanceof Date)) {
+    if ('check_in_date' in booking && !(new Date(booking.check_in_date) instanceof Date)) {
         _a.errors.push("Invalid booking check in date");
     }
-    if ('check_out_date' in booking && !(booking.check_out_date instanceof Date)) {
+    if ('check_out_date' in booking && !(new Date(booking.check_out_date) instanceof Date)) {
         _a.errors.push("Invalid booking check out date");
     }
     if ('status' in booking && typeof booking.status !== 'string') {
@@ -74,7 +75,7 @@ BookingValidator.validateBookingList = (data) => {
             continue;
         validatedBookings.push(validBooking);
     }
-    return validatedBookings;
+    return validatedBookings.length === 0 ? false : validatedBookings;
 };
 BookingValidator.getErrors = () => {
     return _a.errors;

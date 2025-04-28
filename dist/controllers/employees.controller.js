@@ -40,11 +40,11 @@ exports.deleteEmployeeController = exports.updateEmployeeController = exports.cr
 const EmployeeService = __importStar(require("../services/employees.service"));
 const employee_validator_1 = __importDefault(require("../validators/employee.validator"));
 let employees = [];
-const getAllEmployeesController = (_req, res) => {
+const getAllEmployeesController = (req, res) => {
     const employees = EmployeeService.getAllEmployees();
     const validatedEmployees = employee_validator_1.default.validateEmployeeList(employees);
     if (!validatedEmployees) {
-        res.status(500).json({ message: "Invalid employee data format" });
+        res.status(500).json({ message: employee_validator_1.default.getErrors().join('; ') });
         return;
     }
     res.json(validatedEmployees);
@@ -53,12 +53,12 @@ exports.getAllEmployeesController = getAllEmployeesController;
 const getEmployeeByIdController = (req, res) => {
     const employee = EmployeeService.getEmployeeById(req.params.id);
     if (!employee) {
-        res.status(404).json({ message: 'Employee not found' });
+        res.status(404).json({ message: employee_validator_1.default.getErrors().join('; ') });
         return;
     }
     const validatedEmployee = employee_validator_1.default.validateEmployee(employee);
     if (!validatedEmployee || validatedEmployee.id !== req.params.id) {
-        res.status(400).json({ message: 'Invalid employee data' });
+        res.status(400).json({ message: employee_validator_1.default.getErrors().join('; ') });
         return;
     }
     res.json(validatedEmployee);
@@ -67,7 +67,7 @@ exports.getEmployeeByIdController = getEmployeeByIdController;
 const createEmployeeController = (req, res) => {
     const validatedEmployee = employee_validator_1.default.validateEmployee(req.body);
     if (!employee_validator_1.default.validateEmployee) {
-        res.status(400).json({ message: "Invalid employee format" });
+        res.status(400).json({ message: employee_validator_1.default.getErrors().join('; ') });
         return;
     }
     const newEmployee = EmployeeService.createEmployee(validatedEmployee);
@@ -77,12 +77,12 @@ exports.createEmployeeController = createEmployeeController;
 const updateEmployeeController = (req, res) => {
     const updatedEmployee = EmployeeService.updateEmployee(req.params.id, req.body);
     if (!updatedEmployee) {
-        res.status(404).json({ message: 'Employee not found' });
+        res.status(404).json({ message: employee_validator_1.default.getErrors().join('; ') });
         return;
     }
     const validatedEmployee = employee_validator_1.default.validateEmployee(updatedEmployee);
     if (!validatedEmployee || validatedEmployee.id !== req.params.id) {
-        res.status(400).json({ message: 'Invalid updated employee data' });
+        res.status(400).json({ message: employee_validator_1.default.getErrors().join('; ') });
         return;
     }
     res.json(validatedEmployee);
@@ -91,12 +91,12 @@ exports.updateEmployeeController = updateEmployeeController;
 const deleteEmployeeController = (req, res) => {
     const deletedEmployee = EmployeeService.deleteEmployee(req.params.id);
     if (!deletedEmployee) {
-        res.status(404).json({ message: 'Employee not found' });
+        res.status(404).json({ message: employee_validator_1.default.getErrors().join('; ') });
         return;
     }
     const isValid = employee_validator_1.default.validateEmployee(deletedEmployee);
     if (!isValid || deletedEmployee.id !== req.params.id) {
-        res.status(400).json({ message: 'Deleted employee data is invalid' });
+        res.status(400).json({ message: employee_validator_1.default.getErrors().join('; ') });
         return;
     }
     res.json(deletedEmployee);

@@ -48,7 +48,7 @@ ReviewValidator.validateReviewList = (data) => {
             continue;
         validatedReviews.push(validReview);
     }
-    return validatedReviews;
+    return validatedReviews.length === 0 ? false : validatedReviews;
 };
 ReviewValidator.getErrors = () => {
     return _a.errors;

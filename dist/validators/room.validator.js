@@ -62,7 +62,7 @@ RoomValidator.validateRoomList = (data) => {
             continue;
         validatedRooms.push(validRoom);
     }
-    return validatedRooms;
+    return validatedRooms.length === 0 ? false : validatedRooms;
 };
 RoomValidator.getErrors = () => {
     return _a.errors;

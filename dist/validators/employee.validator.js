@@ -6,6 +6,7 @@ class EmployeeValidator {
 _a = EmployeeValidator;
 EmployeeValidator.errors = [];
 EmployeeValidator.validateEmployee = (employee) => {
+    _a.errors = [];
     if (!employee || typeof employee !== 'object') {
         _a.errors.push("Invalid object employee");
     }
@@ -18,10 +19,10 @@ EmployeeValidator.validateEmployee = (employee) => {
     if ('email' in employee && typeof employee.email !== 'string') {
         _a.errors.push("Invalid employee email");
     }
-    if ('job_functions' in employee && typeof employee.room_description !== 'string') {
+    if ('job_functions' in employee && typeof employee.job_functions !== 'string') {
         _a.errors.push("Invalid employee job functions");
     }
-    if ('registration_date' in employee && !(employee.registration_date instanceof Date)) {
+    if ('registration_date' in employee && !(new Date(employee.registration_date) instanceof Date)) {
         _a.errors.push("Invalid registration date");
     }
     if ('phone' in employee && typeof employee.phone !== 'string') {
@@ -47,7 +48,7 @@ EmployeeValidator.validateEmployeeList = (data) => {
             continue;
         validatedEmployees.push(validEmployee);
     }
-    return validatedEmployees;
+    return validatedEmployees.length === 0 ? false : validatedEmployees;
 };
 EmployeeValidator.getErrors = () => {
     return _a.errors;

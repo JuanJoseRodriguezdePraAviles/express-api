@@ -40,7 +40,7 @@ exports.deleteRoomController = exports.updateRoomController = exports.createRoom
 const RoomService = __importStar(require("../services/rooms.service"));
 const room_validator_1 = __importDefault(require("../validators/room.validator"));
 let rooms = [];
-const getAllRoomsController = (_req, res) => {
+const getAllRoomsController = (req, res) => {
     const rooms = RoomService.getAllRooms();
     const validatedRooms = room_validator_1.default.validateRoomList(rooms);
     if (!validatedRooms) {

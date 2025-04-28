@@ -2,10 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const employees_controller_1 = require("../controllers/employees.controller");
+const auth_middleware_1 = require("../middleware/auth.middleware");
 const router = (0, express_1.Router)();
-router.get('/', employees_controller_1.getAllEmployeesController);
-router.get('/:id', employees_controller_1.getEmployeeByIdController);
-router.post('/', employees_controller_1.createEmployeeController);
-router.put('/:id', employees_controller_1.updateEmployeeController);
-router.delete('/:id', employees_controller_1.deleteEmployeeController);
+router.get('/', auth_middleware_1.authenticateToken, employees_controller_1.getAllEmployeesController);
+router.get('/:id', auth_middleware_1.authenticateToken, employees_controller_1.getEmployeeByIdController);
+router.post('/', auth_middleware_1.authenticateToken, employees_controller_1.createEmployeeController);
+router.put('/:id', auth_middleware_1.authenticateToken, employees_controller_1.updateEmployeeController);
+router.delete('/:id', auth_middleware_1.authenticateToken, employees_controller_1.deleteEmployeeController);
 exports.default = router;

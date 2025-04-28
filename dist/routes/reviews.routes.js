@@ -2,10 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const reviews_controller_1 = require("../controllers/reviews.controller");
+const auth_middleware_1 = require("../middleware/auth.middleware");
 const router = (0, express_1.Router)();
-router.get('/', reviews_controller_1.getAllReviewsController);
-router.get('/:id', reviews_controller_1.getReviewByIdController);
-router.post('/', reviews_controller_1.createReviewController);
-router.put('/:id', reviews_controller_1.updateReviewController);
-router.delete('/:id', reviews_controller_1.deleteReviewController);
+router.get('/', auth_middleware_1.authenticateToken, reviews_controller_1.getAllReviewsController);
+router.get('/:id', auth_middleware_1.authenticateToken, reviews_controller_1.getReviewByIdController);
+router.post('/', auth_middleware_1.authenticateToken, reviews_controller_1.createReviewController);
+router.put('/:id', auth_middleware_1.authenticateToken, reviews_controller_1.updateReviewController);
+router.delete('/:id', auth_middleware_1.authenticateToken, reviews_controller_1.deleteReviewController);
 exports.default = router;

@@ -4,6 +4,7 @@ import bookingsRouter from './routes/bookings.routes';
 import reviewsRouter from './routes/reviews.routes';
 import employeesRouter from './routes/employees.routes';
 import loginRouter from './routes/login.routes';
+import serverless from 'serverless-http';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +16,4 @@ app.use("/api/v1/reviews", reviewsRouter);
 app.use("/api/v1/employees", employeesRouter);
 app.use("/api/v1/login", loginRouter);
 
-app.listen(PORT, () => {
-    console.log(`Server listening en http://localhost:${PORT}`)
-});
+export const handler = serverless(app);

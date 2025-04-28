@@ -40,7 +40,7 @@ exports.deleteReviewController = exports.updateReviewController = exports.create
 const ReviewService = __importStar(require("../services/reviews.service"));
 const review_validator_1 = __importDefault(require("../validators/review.validator"));
 let reviews = [];
-const getAllReviewsController = (_req, res) => {
+const getAllReviewsController = (req, res) => {
     const reviews = ReviewService.getAllReviews();
     const validatedReviews = review_validator_1.default.validateReviewList(reviews);
     if (!validatedReviews) {

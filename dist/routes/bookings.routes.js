@@ -2,10 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const bookings_controller_1 = require("../controllers/bookings.controller");
+const auth_middleware_1 = require("../middleware/auth.middleware");
 const router = (0, express_1.Router)();
-router.get('/', bookings_controller_1.getAllBookingsController);
-router.get('/:id', bookings_controller_1.getBookingByIdController);
-router.post('/', bookings_controller_1.createBookingController);
-router.put('/:id', bookings_controller_1.updateBookingController);
-router.delete('/:id', bookings_controller_1.deleteBookingController);
+router.get('/', auth_middleware_1.authenticateToken, bookings_controller_1.getAllBookingsController);
+router.get('/:id', auth_middleware_1.authenticateToken, bookings_controller_1.getBookingByIdController);
+router.post('/', auth_middleware_1.authenticateToken, bookings_controller_1.createBookingController);
+router.put('/:id', auth_middleware_1.authenticateToken, bookings_controller_1.updateBookingController);
+router.delete('/:id', auth_middleware_1.authenticateToken, bookings_controller_1.deleteBookingController);
 exports.default = router;

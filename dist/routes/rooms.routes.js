@@ -2,10 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const rooms_controller_1 = require("../controllers/rooms.controller");
+const auth_middleware_1 = require("../middleware/auth.middleware");
 const router = (0, express_1.Router)();
-router.get('/', rooms_controller_1.getAllRoomsController);
-router.get('/:id', rooms_controller_1.getRoomByIdController);
-router.post('/', rooms_controller_1.createRoomController);
-router.put('/:id', rooms_controller_1.updateRoomController);
-router.delete('/:id', rooms_controller_1.deleteRoomController);
+router.get('/', auth_middleware_1.authenticateToken, rooms_controller_1.getAllRoomsController);
+router.get('/:id', auth_middleware_1.authenticateToken, rooms_controller_1.getRoomByIdController);
+router.post('/', auth_middleware_1.authenticateToken, rooms_controller_1.createRoomController);
+router.put('/:id', auth_middleware_1.authenticateToken, rooms_controller_1.updateRoomController);
+router.delete('/:id', auth_middleware_1.authenticateToken, rooms_controller_1.deleteRoomController);
 exports.default = router;
