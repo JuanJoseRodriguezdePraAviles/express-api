@@ -33,7 +33,7 @@ export const getRoomByIdController = (req: Request, res: Response): void => {
     res.json(validatedRoom);
 }
 
-export const createRoomController = (req: Request, res: Response): void => {
+export const createRoomController = async (req: Request, res: Response): Promise<void> => {
     const validatedRoom = RoomValidator.validateRoom(req.body);
 
     if (!RoomValidator.validateRoom) {
@@ -41,7 +41,7 @@ export const createRoomController = (req: Request, res: Response): void => {
         return;
     }
 
-    const newRoom: Room = RoomService.createRoom(validatedRoom as Room);
+    const newRoom: Room = await RoomService.createRoom(validatedRoom as Room);
     res.status(201).json(newRoom);
 }
 
@@ -63,19 +63,13 @@ export const updateRoomController = (req: Request, res: Response): void => {
     res.json(validatedRoom);
 }
 
-export const deleteRoomController = (req: Request, res: Response): void => {
-    const deletedRoom = RoomService.deleteRoom(req.params.id);
+export const deleteRoomController = async (req: Request, res: Response): Promise<void> => {
+    const sucess = await RoomService.deleteRoom(req.params.id);
 
-    if (!deletedRoom){
+    if (!sucess){
         res.status(404).json({ message: RoomValidator.getErrors().join('; ') });
         return;
     }
 
-    const isValid = RoomValidator.validateRoom(deletedRoom);
-    if (!isValid || deletedRoom.room_id !== req.params.id) {
-        res.status(400).json({ message: RoomValidator.getErrors().join('; ') });
-        return;
-    }
-
-    res.json(deletedRoom);
+    res.status(204).send();
 }

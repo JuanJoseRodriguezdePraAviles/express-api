@@ -1,51 +1,39 @@
-import fs from 'fs';
-import path from 'path';
+import { ReviewModel } from '../schemas/review.schema'
 import { Review } from '../interfaces/Review';
 
-const reviewsFilePath = path.join(__dirname, '../../public/Reviews.json');
 
-const readReviewsFromFile = (): Review[] => {
-    const fileData = fs.readFileSync(reviewsFilePath, 'utf-8');
-    return JSON.parse(fileData);
+export const getAllReviews = async (): Promise<Review[]> => {
+    const reviews = await ReviewModel.find();
+    return reviews;
 }
 
-export const getAllReviews = (): Review[] => {
-    return readReviewsFromFile();
+export const getReviewById = async (id: string): Promise<Review | null> => {
+    const review = await ReviewModel.findOne({id: id});
+    return review;
 }
 
-export const getReviewById = (id: string): Review | undefined => {
-    const reviews = readReviewsFromFile();
-    return reviews.find(review => String(review.id) === id);
+export const createReview = async (newReview: Review): Promise<Review> => {
+    const review = new ReviewModel({
+        ...newReview,
+        id: Date.now().toString()
+    });
+    await review.save();
+    return review;
 }
 
-export const createReview = (newReview: Review): Review => {
-    const reviews = readReviewsFromFile();
-    newReview.id = Date.now().toString();
-    reviews.push(newReview);
-    fs.writeFileSync(reviewsFilePath, JSON.stringify(reviews, null, 2), 'utf-8');
-    return newReview;
+export const updateReview = async (id: string, updateReview: Partial<Review>): Promise<Review | null> => {
+    const review = await ReviewModel.findOneAndUpdate(
+        {id: id},
+        updateReview,
+        {new: true}
+    );
+    return review;
 }
 
-export const updateReview = (id: string, updateReview: Partial<Review>): Review | undefined => {
-    const reviews = readReviewsFromFile();
-    const index = reviews.findIndex(review => String(review.id) === id);
-
-    if (index !== -1) {
-        reviews[index] = { ...reviews[index], ...updateReview };
-        fs.writeFileSync(reviewsFilePath, JSON.stringify(reviews, null, 2), 'utf-8');
-        return reviews[index];
+export const deleteReview = async (id: string): Promise<boolean> => {
+    const deleted = await ReviewModel.findOneAndDelete({id: id});
+    if(!deleted) {
+        return false;
     }
-    return undefined;
-}
-
-export const deleteReview = (id: string): Review | undefined => {
-    const reviews = readReviewsFromFile();
-    const index = reviews.findIndex(review => String(review.id) === id);
-
-    if (index !== -1) {
-        const deletedReview = reviews.splice(index, 1);
-        fs.writeFileSync(reviewsFilePath, JSON.stringify(reviews, null, 2), 'utf-8');
-        return deletedReview[0];
-    }
-    return undefined;
+    return true;
 }

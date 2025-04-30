@@ -32,7 +32,7 @@ export const getEmployeeByIdController = (req: Request, res: Response): void => 
     res.json(validatedEmployee);
 }
 
-export const createEmployeeController = (req: Request, res: Response): void => {
+export const createEmployeeController = async (req: Request, res: Response): Promise<void> => {
     const validatedEmployee = EmployeeValidator.validateEmployee(req.body);
 
     if (!EmployeeValidator.validateEmployee) {
@@ -40,7 +40,7 @@ export const createEmployeeController = (req: Request, res: Response): void => {
         return;
     }
 
-    const newEmployee: Employee = EmployeeService.createEmployee(validatedEmployee as Employee);
+    const newEmployee: Employee = await EmployeeService.createEmployee(validatedEmployee as Employee);
     res.status(201).json(newEmployee);
 }
 
@@ -62,19 +62,13 @@ export const updateEmployeeController = (req: Request, res: Response): void => {
     res.json(validatedEmployee);
 }
 
-export const deleteEmployeeController = (req: Request, res: Response): void => {
-    const deletedEmployee = EmployeeService.deleteEmployee(req.params.id);
+export const deleteEmployeeController = async (req: Request, res: Response): Promise<void> => {
+    const success = await EmployeeService.deleteEmployee(req.params.id);
 
-    if (!deletedEmployee){
+    if (!success){
         res.status(404).json({ message: EmployeeValidator.getErrors().join('; ') });
         return;
     }
 
-    const isValid = EmployeeValidator.validateEmployee(deletedEmployee);
-    if (!isValid || deletedEmployee.id !== req.params.id) {
-        res.status(400).json({ message: EmployeeValidator.getErrors().join('; ') });
-        return;
-    }
-
-    res.json(deletedEmployee);
+    res.status(204).send();
 }

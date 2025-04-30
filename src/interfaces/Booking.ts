@@ -6,12 +6,6 @@ import { RoomType } from "./RoomType";
 export interface Booking {
     booking_id: string,
     room_id: string,
-    room_name: string,
-    room_description: string,
-    room_type: RoomType,
-    room_price: number,
-    room_status?: RoomStatus,
-    room_amenities?: Amenities[],
     client_id: string,
     client_name?: string,
     client_email?: string,

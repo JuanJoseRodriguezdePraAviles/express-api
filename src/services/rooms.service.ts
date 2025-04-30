@@ -1,51 +1,38 @@
-import fs from 'fs';
-import path from 'path';
+import { RoomModel } from '../schemas/room.schema';
 import { Room } from '../interfaces/Room';
 
-const roomsFilePath = path.join(__dirname, '../../public/Rooms.json');
-
-const readRoomsFromFile = (): Room[] => {
-    const fileData = fs.readFileSync(roomsFilePath, 'utf-8');
-    return JSON.parse(fileData);
+export const getAllRooms = async (): Promise<Room[]> => {
+    const rooms = await RoomModel.find();
+    return rooms;
 }
 
-export const getAllRooms = (): Room[] => {
-    return readRoomsFromFile();
+export const getRoomById = async (id: string): Promise<Room | null> => {
+    const room = await RoomModel.findOne({room_id: id});
+    return room;
 }
 
-export const getRoomById = (id: string): Room | undefined => {
-    const rooms = readRoomsFromFile();
-    return rooms.find(room => String(room.room_id) === id);
+export const createRoom = async (newRoom: Partial<Room>): Promise<Room> => {
+    const room = new RoomModel({
+        ...newRoom,
+        room_id: Date.now().toString()
+    });
+    await room.save();
+    return room;
 }
 
-export const createRoom = (newRoom: Room): Room => {
-    const rooms = readRoomsFromFile();
-    newRoom.room_id = Date.now().toString();
-    rooms.push(newRoom);
-    fs.writeFileSync(roomsFilePath, JSON.stringify(rooms, null, 2), 'utf-8');
-    return newRoom;
+export const updateRoom = async (id: string, updateRoom: Partial<Room>): Promise<Room | null> => {
+    const room = await RoomModel.findOneAndUpdate(
+        {room_id: id},
+        updateRoom,
+        {new: true}
+    );
+    return room;
 }
 
-export const updateRoom = (id: string, updateRoom: Partial<Room>): Room | undefined => {
-    const rooms = readRoomsFromFile();
-    const index = rooms.findIndex(room => String(room.room_id) === id);
-
-    if (index !== -1) {
-        rooms[index] = { ...rooms[index], ...updateRoom };
-        fs.writeFileSync(roomsFilePath, JSON.stringify(rooms, null, 2), 'utf-8');
-        return rooms[index];
+export const deleteRoom = async (id: string): Promise<boolean> => {
+    const deleted = await RoomModel.findOneAndDelete({room_id: id});
+    if(!deleted) {
+        return false;
     }
-    return undefined;
-}
-
-export const deleteRoom = (id: string): Room | undefined => {
-    const rooms = readRoomsFromFile();
-    const index = rooms.findIndex(room => String(room.room_id) === id);
-
-    if (index !== -1) {
-        const deletedRoom = rooms.splice(index, 1);
-        fs.writeFileSync(roomsFilePath, JSON.stringify(rooms, null, 2), 'utf-8');
-        return deletedRoom[0];
-    }
-    return undefined;
+    return true;
 }

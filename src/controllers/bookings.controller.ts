@@ -33,7 +33,7 @@ export const getBookingByIdController = (req: Request, res: Response): void => {
     res.json(validatedBooking);
 }
 
-export const createBookingController = (req: Request, res: Response): void => {
+export const createBookingController = async (req: Request, res: Response): Promise<void> => {
     const validatedBooking = BookingValidator.validateBooking(req.body);
 
     if (!BookingValidator.validateBooking) {
@@ -41,7 +41,7 @@ export const createBookingController = (req: Request, res: Response): void => {
         return;
     }
 
-    const newBooking: Booking = BookingService.createBooking(validatedBooking as Booking);
+    const newBooking: Booking = await BookingService.createBooking(validatedBooking as Booking);
     res.status(201).json(newBooking);
 }
 
@@ -63,19 +63,13 @@ export const updateBookingController = (req: Request, res: Response): void => {
     res.json(validatedBooking);
 }
 
-export const deleteBookingController = (req: Request, res: Response): void => {
-    const deletedBooking = BookingService.deleteBooking(req.params.id);
+export const deleteBookingController = async (req: Request, res: Response): Promise<void> => {
+    const success = await BookingService.deleteBooking(req.params.id);
 
-    if (!deletedBooking){
+    if (!success){
         res.status(404).json({ message: BookingValidator.getErrors().join('; ')});
         return;
     }
 
-    const isValid = BookingValidator.validateBooking(deletedBooking);
-    if (!isValid || deletedBooking.booking_id !== req.params.id) {
-        res.status(400).json({ message: BookingValidator.getErrors().join('; ') });
-        return;
-    }
-
-    res.json(deletedBooking);
+    res.status(204).send();
 }

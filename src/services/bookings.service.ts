@@ -1,51 +1,38 @@
-import fs from 'fs';
-import path from 'path';
+import { BookingModel } from '../schemas/booking.schema';
 import { Booking } from '../interfaces/Booking';
 
-const bookingsFilePath = path.join(__dirname, '../../public/Bookings.json');
-
-const readBookingsFromFile = (): Booking[] => {
-    const fileData = fs.readFileSync(bookingsFilePath, 'utf-8');
-    return JSON.parse(fileData);
+export const getAllBookings = async (): Promise<Booking[]> => {
+    const bookings = await BookingModel.find();
+    return bookings;
 }
 
-export const getAllBookings = (): Booking[] => {
-    return readBookingsFromFile();
+export const getBookingById = async (id: string): Promise<Booking | null> => {
+    const booking = await BookingModel.findOne({booking_id: id});
+    return booking;
 }
 
-export const getBookingById = (id: string): Booking | undefined => {
-    const bookings = readBookingsFromFile();
-    return bookings.find(booking => String(booking.booking_id) === id);
+export const createBooking = async (newBooking: Partial<Booking>): Promise<Booking> => {
+    const booking = new BookingModel({
+        ...newBooking,
+        booking_id: Date.now().toString()
+    });
+    await booking.save();
+    return booking;
 }
 
-export const createBooking = (newBooking: Booking): Booking => {
-    const bookings = readBookingsFromFile();
-    newBooking.booking_id = Date.now().toString();
-    bookings.push(newBooking);
-    fs.writeFileSync(bookingsFilePath, JSON.stringify(bookings, null, 2), 'utf-8');
-    return newBooking;
+export const updateBooking = async (id: string, updateBooking: Partial<Booking>): Promise<Booking | null> => {
+    const booking = await BookingModel.findOneAndUpdate(
+        {booking_id: id},
+        updateBooking,
+        {new: true}
+    );
+    return booking;
 }
 
-export const updateBooking = (id: string, updateBooking: Partial<Booking>): Booking | undefined => {
-    const bookings = readBookingsFromFile();
-    const index = bookings.findIndex(booking => String(booking.booking_id) === id);
-
-    if (index !== -1) {
-        bookings[index] = { ...bookings[index], ...updateBooking };
-        fs.writeFileSync(bookingsFilePath, JSON.stringify(bookings, null, 2), 'utf-8');
-        return bookings[index];
+export const deleteBooking = async (id: string): Promise<boolean> => {
+    const deleted = await BookingModel.findOneAndDelete({booking_id: id});
+    if(!deleted) {
+        return false;
     }
-    return undefined;
-}
-
-export const deleteBooking = (id: string): Booking | undefined => {
-    const bookings = readBookingsFromFile();
-    const index = bookings.findIndex(booking => String(booking.booking_id) === id);
-
-    if (index !== -1) {
-        const deletedBooking = bookings.splice(index, 1);
-        fs.writeFileSync(bookingsFilePath, JSON.stringify(bookings, null, 2), 'utf-8');
-        return deletedBooking[0];
-    }
-    return undefined;
+    return true;
 }

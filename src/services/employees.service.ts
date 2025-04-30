@@ -1,51 +1,38 @@
-import fs from 'fs';
-import path from 'path';
+import { EmployeeModel } from '../schemas/employee.schema';
 import { Employee } from '../interfaces/Employee';
 
-const employeesFilePath = path.join(__dirname, '../../public/Employees.json');
-
-const readEmployeesFromFile = (): Employee[] => {
-    const fileData = fs.readFileSync(employeesFilePath, 'utf-8');
-    return JSON.parse(fileData);
+export const getAllEmployees = async (): Promise<Employee[]> => {
+    const employees = await EmployeeModel.find();
+    return employees;
 }
 
-export const getAllEmployees = (): Employee[] => {
-    return readEmployeesFromFile();
+export const getEmployeeById = async (id: string): Promise<Employee | null> => {
+    const employee = await EmployeeModel.findOne({id: id});
+    return employee;
 }
 
-export const getEmployeeById = (id: string): Employee | undefined => {
-    const employees = readEmployeesFromFile();
-    return employees.find(employee => String(employee.id) === id);
+export const createEmployee = async (newEmployee: Employee): Promise<Employee> => {
+    const employee = new EmployeeModel({
+        ...newEmployee,
+        id: Date.now().toString()
+    });
+    await employee.save();
+    return employee;
 }
 
-export const createEmployee = (newEmployee: Employee): Employee => {
-    const employees = readEmployeesFromFile();
-    newEmployee.id = Date.now().toString();
-    employees.push(newEmployee);
-    fs.writeFileSync(employeesFilePath, JSON.stringify(employees, null, 2), 'utf-8');
-    return newEmployee;
+export const updateEmployee = async (id: string, updateEmployee: Partial<Employee>): Promise<Employee | null> => {
+    const employee = await EmployeeModel.findOneAndUpdate(
+        {booking_id: id},
+        updateEmployee,
+        {new: true}
+    );
+    return employee;
 }
 
-export const updateEmployee = (id: string, updateEmployee: Partial<Employee>): Employee | undefined => {
-    const employees = readEmployeesFromFile();
-    const index = employees.findIndex(employee => String(employee.id) === id);
-
-    if (index !== -1) {
-        employees[index] = { ...employees[index], ...updateEmployee };
-        fs.writeFileSync(employeesFilePath, JSON.stringify(employees, null, 2), 'utf-8');
-        return employees[index];
+export const deleteEmployee = async (id: string): Promise<boolean> => {
+    const deleted = await EmployeeModel.findByIdAndDelete({id: id});
+    if(!deleted) {
+        return false;
     }
-    return undefined;
-}
-
-export const deleteEmployee = (id: string): Employee | undefined => {
-    const employees = readEmployeesFromFile();
-    const index = employees.findIndex(employee => String(employee.id) === id);
-
-    if (index !== -1) {
-        const deletedEmployee = employees.splice(index, 1);
-        fs.writeFileSync(employeesFilePath, JSON.stringify(employees, null, 2), 'utf-8');
-        return deletedEmployee[0];
-    }
-    return undefined;
+    return true;
 }

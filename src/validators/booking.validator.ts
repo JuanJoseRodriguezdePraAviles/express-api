@@ -16,26 +16,6 @@ export default class BookingValidator {
         if ('room_id' in booking && typeof booking.room_id !== 'string') {
             this.errors.push("Invalid room ID");
         }
-        if ('room_name' in booking && typeof booking.room_name !== 'string') {
-            this.errors.push("Invalid booking room name");
-        }
-        if ('room_description' in booking && typeof booking.room_description !== 'string') {
-            this.errors.push("Invalid booking room description");
-        }
-        if ('room_type' in booking && typeof booking.room_type !== 'string') {
-            this.errors.push("Invalid booking room type");
-        }
-
-        if ('room_price' in booking && typeof booking.room_price !== 'number') {
-            this.errors.push("Invalid booking room price");
-        }
-        if ('room_status' in booking && typeof booking.room_status !== 'string') {
-            this.errors.push("Invalid booking room status");
-        }
-        if ('room_amenities' in booking && !Array.isArray(booking.room_amenities)) {
-            this.errors.push("Invalid booking room amenities");
-        }
-
         if ('client_id' in booking && typeof booking.client_id !== 'string') {
             this.errors.push("Invalid booking client id");
         }
@@ -48,7 +28,6 @@ export default class BookingValidator {
         if ('client_phone' in booking && typeof booking.client_phone !== 'string') {
             this.errors.push("Invalid booking client phone");
         }
-
         if ('order_date' in booking && !(new Date(booking.order_date) instanceof Date)) {
             this.errors.push("Invalid booking order date");
         }

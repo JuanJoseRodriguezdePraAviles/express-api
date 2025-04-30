@@ -33,7 +33,7 @@ export const getReviewByIdController = (req: Request, res: Response): void => {
     res.json(validatedReview);
 }
 
-export const createReviewController = (req: Request, res: Response): void => {
+export const createReviewController = async(req: Request, res: Response): Promise<void> => {
     const validatedReview = ReviewValidator.validateReview(req.body);
 
     if (!ReviewValidator.validateReview) {
@@ -41,7 +41,7 @@ export const createReviewController = (req: Request, res: Response): void => {
         return;
     }
 
-    const newReview: Review = ReviewService.createReview(validatedReview as Review);
+    const newReview: Review = await ReviewService.createReview(validatedReview as Review);
     res.status(201).json(newReview);
 }
 
@@ -63,19 +63,13 @@ export const updateReviewController = (req: Request, res: Response): void => {
     res.json(validatedReview);
 }
 
-export const deleteReviewController = (req: Request, res: Response): void => {
-    const deletedReview = ReviewService.deleteReview(req.params.id);
+export const deleteReviewController = async (req: Request, res: Response): Promise<void> => {
+    const success = ReviewService.deleteReview(req.params.id);
 
-    if (!deletedReview){
+    if (!success){
         res.status(404).json({ message: ReviewValidator.getErrors().join('; ') });
         return;
     }
 
-    const isValid = ReviewValidator.validateReview(deletedReview);
-    if (!isValid || deletedReview.id !== req.params.id) {
-        res.status(400).json({ message: ReviewValidator.getErrors().join('; ') });
-        return;
-    }
-
-    res.json(deletedReview);
+    res.status(204).send();
 }
