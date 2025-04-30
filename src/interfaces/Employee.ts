@@ -1,7 +1,7 @@
 export interface Employee {
-    id: string,
+    _id?: string,
     name: string,
-    email?: string,
+    email: string,
     job_functions?: string,
     registration_date: Date,
     phone?: string,

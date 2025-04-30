@@ -2,7 +2,6 @@ import { Schema, model } from 'mongoose';
 import { Review } from '../interfaces/Review';
 
 const ReviewSchema = new Schema<Review>({
-    id: {type: String, required: true},
     email: {type: String, required: true},
     date: {type: Date, required: true},
     customer_id: {type: String, required: true},

@@ -2,9 +2,8 @@ import { Schema, model } from 'mongoose';
 import { Employee } from '../interfaces/Employee';
 
 const EmployeeSchema = new Schema<Employee>({
-    id: {type: String, required: true},
     name: {type: String, required: true},
-    email: {type: String},
+    email: {type: String, required: true},
     job_functions: {type: String},
     registration_date: {type: Date, required: true},
     phone: {type: String},

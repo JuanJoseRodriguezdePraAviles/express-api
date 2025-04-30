@@ -10,7 +10,7 @@ export default class BookingValidator {
             this.errors.push("Invalid object booking");
         }
 
-        if ('booking_id' in booking && typeof booking.booking_id !== 'string') {
+        if ('_id' in booking && typeof booking.booking_id !== 'string') {
             this.errors.push("Invalid booking ID");
         }
         if ('room_id' in booking && typeof booking.room_id !== 'string') {

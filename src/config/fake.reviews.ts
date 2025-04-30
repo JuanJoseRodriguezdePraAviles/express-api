@@ -3,7 +3,6 @@ import { Review } from '../interfaces/Review';
 
 export function createRandomReview(): Review {
     return {
-        id: faker.string.uuid(),
         email: faker.internet.email(),
         date: faker.date.recent(),
         customer_id: faker.string.uuid(),

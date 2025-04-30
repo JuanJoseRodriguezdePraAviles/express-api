@@ -3,7 +3,6 @@ import { Employee } from "../interfaces/Employee";
 
 export function createRandomEmployee(): Employee {
     return {
-        id: faker.string.uuid(),
         name: faker.person.fullName(),
         email: faker.internet.email(),
         job_functions: faker.lorem.words(),

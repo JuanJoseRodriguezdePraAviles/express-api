@@ -6,7 +6,6 @@ import { Amenities } from "../interfaces/Amenities";
 
 export function createRandomRoom(): Room {
     return {
-        room_id: faker.string.uuid(),
         room_name: faker.lorem.words(2),
         room_type: faker.helpers.arrayElement(Object.values(RoomType)),
         room_floor: faker.number.int({min: 1, max: 10}).toString(),

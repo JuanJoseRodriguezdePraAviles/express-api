@@ -4,7 +4,7 @@ import { RoomStatus } from "./RoomStatus";
 import { RoomType } from "./RoomType";
 
 export interface Booking {
-    booking_id: string,
+    _id?: string,
     room_id: string,
     client_id: string,
     client_name?: string,

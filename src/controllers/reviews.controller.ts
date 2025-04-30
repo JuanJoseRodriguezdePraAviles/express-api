@@ -26,7 +26,7 @@ export const getReviewByIdController = (req: Request, res: Response): void => {
 
     const validatedReview = ReviewValidator.validateReview(review);
 
-    if(!validatedReview || validatedReview.id !== req.params.id) {
+    if(!validatedReview || validatedReview._id !== req.params.id) {
         res.status(400).json({ message: ReviewValidator.getErrors().join('; ') });
         return;
     }
@@ -55,7 +55,7 @@ export const updateReviewController = (req: Request, res: Response): void => {
 
     const validatedReview = ReviewValidator.validateReview(updatedReview);
 
-    if (!validatedReview || validatedReview.id !== req.params.id) {
+    if (!validatedReview || validatedReview._id !== req.params.id) {
         res.status(400).json({ message: ReviewValidator.getErrors().join('; ') });
         return;
     }

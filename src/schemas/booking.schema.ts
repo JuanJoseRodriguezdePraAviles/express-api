@@ -3,7 +3,6 @@ import { BookingStatus } from '../interfaces/BookingStatus';
 import { Booking } from '../interfaces/Booking';
 
 const BookingSchema = new Schema<Booking>({
-    booking_id: {type: String, required: true},
     room_id: {type: String, required: true},
     client_id: {type: String, required: true},
     client_name: {type: String},

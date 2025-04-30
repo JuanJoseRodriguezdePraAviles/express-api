@@ -26,7 +26,7 @@ export const getBookingByIdController = (req: Request, res: Response): void => {
 
     const validatedBooking = BookingValidator.validateBooking(booking);
 
-    if(!validatedBooking || validatedBooking.booking_id !== req.params.id) {
+    if(!validatedBooking || validatedBooking._id !== req.params.id) {
         res.status(400).json({ message: BookingValidator.getErrors().join('; ') });
         return;
     }
@@ -55,7 +55,7 @@ export const updateBookingController = (req: Request, res: Response): void => {
 
     const validatedBooking = BookingValidator.validateBooking(updatedBooking);
 
-    if (!validatedBooking || validatedBooking.booking_id !== req.params.id) {
+    if (!validatedBooking || validatedBooking._id !== req.params.id) {
         res.status(400).json({ message: BookingValidator.getErrors().join('; ') });
         return;
     }

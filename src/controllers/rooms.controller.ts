@@ -26,7 +26,7 @@ export const getRoomByIdController = (req: Request, res: Response): void => {
 
     const validatedRoom = RoomValidator.validateRoom(room);
 
-    if(!validatedRoom || validatedRoom.room_id !== req.params.id) {
+    if(!validatedRoom || validatedRoom._id !== req.params.id) {
         res.status(400).json({ message: RoomValidator.getErrors().join('; ') });
         return;
     }
@@ -55,7 +55,7 @@ export const updateRoomController = (req: Request, res: Response): void => {
 
     const validatedRoom = RoomValidator.validateRoom(updatedRoom);
 
-    if (!validatedRoom || validatedRoom.room_id !== req.params.id) {
+    if (!validatedRoom || validatedRoom._id !== req.params.id) {
         res.status(400).json({ message: RoomValidator.getErrors().join('; ') });
         return;
     }

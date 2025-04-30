@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import { bookings } from './fake.bookings';
 import { rooms } from './fake.rooms';
 import { reviews } from './fake.reviews';
 import { employees } from './fake.employees';
@@ -8,6 +7,7 @@ import { BookingModel } from '../schemas/booking.schema';
 import { RoomModel } from '../schemas/room.schema';
 import { ReviewModel } from '../schemas/review.schema';
 import { EmployeeModel } from '../schemas/employee.schema';
+import { createRandomBooking } from './fake.bookings';
 
 dotenv.config();
 
@@ -16,13 +16,14 @@ export async function seed() {
         await mongoose.connect(process.env.DB_CONN_STRING as string, {
             dbName: process.env.DB_NAME
         })
-        await BookingModel.deleteMany();
-        const resultBooking = await BookingModel.insertMany(bookings);
-        console.log(`${resultBooking.length} inserted bookings`);
-
         await RoomModel.deleteMany();
         const resultRoom = await RoomModel.insertMany(rooms);
         console.log(`${resultRoom.length} inserted rooms`);
+
+        await BookingModel.deleteMany();
+        const bookings = resultRoom.map(room => createRandomBooking(room.id));
+        const resultBooking = await BookingModel.insertMany(bookings);
+        console.log(`${resultBooking.length} inserted bookings`);
 
         await ReviewModel.deleteMany();
         const resultReview = await ReviewModel.insertMany(reviews);

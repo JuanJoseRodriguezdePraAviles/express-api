@@ -25,7 +25,7 @@ export const getEmployeeByIdController = (req: Request, res: Response): void => 
 
     const validatedEmployee = EmployeeValidator.validateEmployee(employee);
 
-    if(!validatedEmployee || validatedEmployee.id !== req.params.id) {
+    if(!validatedEmployee || validatedEmployee._id !== req.params.id) {
         res.status(400).json({ message: EmployeeValidator.getErrors().join('; ') });
         return;
     }
@@ -54,7 +54,7 @@ export const updateEmployeeController = (req: Request, res: Response): void => {
 
     const validatedEmployee = EmployeeValidator.validateEmployee(updatedEmployee);
 
-    if (!validatedEmployee || validatedEmployee.id !== req.params.id) {
+    if (!validatedEmployee || validatedEmployee._id !== req.params.id) {
         res.status(400).json({ message: EmployeeValidator.getErrors().join('; ') });
         return;
     }

@@ -1,5 +1,5 @@
 export interface Review {
-    id: string,
+    _id?: string,
     email: string,
     date: Date,
     customer_id: string
