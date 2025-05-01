@@ -1,24 +1,32 @@
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
-
+import bcrypt from "bcryptjs";
 
 import { Request, Response } from 'express';
+import { EmployeeModel } from '../schemas/employee.schema';
 
-export const loginController = (req: Request, res: Response): void => {
+export const loginController = async (req: Request, res: Response): Promise<void> => {
     const { username, password } = req.body;
-    if(username !== 'admin') {
-        res.status(403).json({ message: "Ivalid username"})
-    }
-    if(password !== 'admin') {
-        res.status(403).json({ message: "Ivalid password"})
-    }
-    const token = generateAccessToken(username);
+    try {
+        const employee = await EmployeeModel.findOne({ email: username});
+        if(!employee) {
+            res.status(401).json({ message: "Invalid username or password"});
+            return;
+        }
+        const isPasswordValid = await bcrypt.compare(password, employee.password);
+        if(!isPasswordValid) {
+            res.status(401).json({ message: "Invalid username or password"});
+            return;
+        }
+        const token = generateAccessToken(employee._id.toString());
 
-    res.status(200).send({
-        token: token,
-        loggedUserID: username
-    })
-
+        res.status(200).send({
+            token: token,
+            loggedUserID: employee._id
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error", error});
+    }
 }
 
 function generateAccessToken(username: string) {

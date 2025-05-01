@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { rooms } from './fake.rooms';
 import { reviews } from './fake.reviews';
-import { employees } from './fake.employees';
+import { generateEmployees } from './fake.employees';
 import { BookingModel } from '../schemas/booking.schema';
 import { RoomModel } from '../schemas/room.schema';
 import { ReviewModel } from '../schemas/review.schema';
@@ -30,8 +30,9 @@ export async function seed() {
         console.log(`${resultReview.length} inserted reviews`);
 
         await EmployeeModel.deleteMany();
-        const resultEmployee = await EmployeeModel.insertMany(employees);
-        console.log(`${resultEmployee.length} inserted employees`);
+        const resultEmployee = await generateEmployees(10);
+        await EmployeeModel.insertMany(resultEmployee);
+        console.log(`${resultReview.length} inserted employees`);
 
         mongoose.disconnect();
     } catch (err) {
