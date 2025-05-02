@@ -9,23 +9,21 @@ export default class EmployeeValidator {
         if (!employee || typeof employee !== 'object') {
             this.errors.push("Invalid object employee");
         }
-
         if ('id' in employee && typeof employee.id !== 'string') {
             this.errors.push("Invalid employee ID");
         }
-        if ('name' in employee && typeof employee.name !== 'string') {
-            this.errors.push("Invalid employee name");
+        if (!('name' in employee) || typeof employee.name !== 'string') {
+            this.errors.push("Missing or Invalid employee name");
         }
-        if ('email' in employee && typeof employee.email !== 'string') {
-            this.errors.push("Invalid employee email");
+        if (!('email' in employee) || typeof employee.email !== 'string') {
+            this.errors.push("Missing or Invalid employee email");
         }
         if ('job_functions' in employee && typeof employee.job_functions !== 'string') {
             this.errors.push("Invalid employee job functions");
         }
-        if ('registration_date' in employee && !(new Date(employee.registration_date) instanceof Date)) {
-            this.errors.push("Invalid registration date");
+        if (!('registration_date' in employee) || !(new Date(employee.registration_date) instanceof Date)) {
+            this.errors.push("MissingInvalid registration date");
         }
-
         if ('phone' in employee && typeof employee.phone !== 'string') {
             this.errors.push("Invalid employee phone");
         }

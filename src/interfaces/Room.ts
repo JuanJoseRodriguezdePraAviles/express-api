@@ -4,7 +4,7 @@ import { RoomType } from "./RoomType";
 
 export interface Room {
     _id?: string,
-    room_name?: string,
+    room_name: string,
     room_type?: RoomType,
     room_floor?: string,
     status?: RoomStatus,

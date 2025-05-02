@@ -9,30 +9,32 @@ export default class ReviewValidator {
         if (!review || typeof review !== 'object') {
             this.errors.push("Invalid object review");
         }
-
         if ('id' in review && typeof review.id !== 'string') {
             this.errors.push("Invalid review id");
         }
-        if ('date' in review && !(new Date(review.date) instanceof Date)) {
-            this.errors.push("Invalid review date");
+        if (!('email' in review) || typeof review.email !== 'string') {
+            this.errors.push("Missing or Invalid review email");
         }
-        if ('customer_name' in review && typeof review.customer_name !== 'string') {
-            this.errors.push("Invalid review customer name");
+        if (!('date' in review) || !(new Date(review.date) instanceof Date)) {
+            this.errors.push("Missing or Invalid review date");
         }
-        if ('customer_id' in review && typeof review.customer_id !== 'string') {
-            this.errors.push("Invalid review customer id");
+        if (!('customer_name' in review) || typeof review.customer_name !== 'string') {
+            this.errors.push("Missing or Invalid review customer name");
         }
-        if ('phone' in review && typeof review.phone !== 'string') {
-            this.errors.push("Invalid review phone");
+        if (!('customer_id' in review) || typeof review.customer_id !== 'string') {
+            this.errors.push("Missing or Invalid review customer id");
         }
-        if ('subject' in review && typeof review.subject !== 'string') {
-            this.errors.push("Invalid review subject");
+        if (!('phone' in review) || typeof review.phone !== 'string') {
+            this.errors.push("Missing or Invalid review phone");
         }
-        if ('comment' in review && typeof review.comment !== 'string') {
-            this.errors.push("Invalid review comment");
+        if (!('subject' in review) || typeof review.subject !== 'string') {
+            this.errors.push("Missing or Invalid review subject");
         }
-        if ('archived' in review && typeof review.archived !== 'boolean') {
-            this.errors.push("Invalid review archived");
+        if (!('comment' in review) || typeof review.comment !== 'string') {
+            this.errors.push("Missing or Invalid review comment");
+        }
+        if (!('archived' in review) || typeof review.archived !== 'boolean') {
+            this.errors.push("Missing or Invalid review archived");
         }
 
         return this.errors.length === 0 ? review as Review : false;

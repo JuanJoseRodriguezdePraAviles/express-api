@@ -9,15 +9,14 @@ export default class BookingValidator {
         if (!booking || typeof booking !== 'object') {
             this.errors.push("Invalid object booking");
         }
-
-        if ('_id' in booking && typeof booking.booking_id !== 'string') {
+        if ('_id' in booking && typeof booking._id !== 'string') {
             this.errors.push("Invalid booking ID");
         }
-        if ('room_id' in booking && typeof booking.room_id !== 'string') {
-            this.errors.push("Invalid room ID");
+        if (!('room_id' in booking) || typeof booking.room_id !== 'string') {
+            this.errors.push("Missing or Invalid room ID");
         }
-        if ('client_id' in booking && typeof booking.client_id !== 'string') {
-            this.errors.push("Invalid booking client id");
+        if (!('client_id' in booking) || typeof booking.client_id !== 'string') {
+            this.errors.push("Missing or Invalid booking client id");
         }
         if ('client_name' in booking && typeof booking.client_name !== 'string') {
             this.errors.push("Invalid booking client name");

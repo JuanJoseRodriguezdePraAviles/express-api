@@ -4,7 +4,7 @@ import { RoomType } from '../interfaces/RoomType';
 import { Room } from '../interfaces/Room';
 
 const RoomSchema = new Schema<Room>({
-    room_name: {type: String},
+    room_name: {type: String, required: true},
     room_type: {type: String, enum: Object.values(RoomType)},
     room_floor: {type: String},
     status: {type: String, enum: Object.values(RoomStatus)},

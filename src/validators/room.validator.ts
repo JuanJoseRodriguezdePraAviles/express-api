@@ -14,7 +14,7 @@ export default class RoomValidator {
         if ('_id' in room && typeof room._id !== 'string') {
             this.errors.push("Invalid room ID");
         }
-        if ('room_name' in room && typeof room.room_name !== 'string') {
+        if (!('room_name' in room) || typeof room.room_name !== 'string') {
             this.errors.push("Invalid room name");
         }
         if ('room_type' in room && typeof room.room_type !== 'string') {
