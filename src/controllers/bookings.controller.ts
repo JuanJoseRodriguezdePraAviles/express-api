@@ -5,16 +5,9 @@ import BookingValidator from '../validators/booking.validator';
 
 let bookings: Booking[] = [];
 
-export const getAllBookingsController = (req: Request, res: Response): void => {
-    const bookings = BookingService.getAllBookings();
-    const validatedBookings = BookingValidator.validateBookingList(bookings);
-
-    if(!validatedBookings) {
-        res.status(500).json({ message: BookingValidator.getErrors().join('; ') });
-        return;
-    }
-
-    res.json(validatedBookings);
+export const getAllBookingsController = async (req: Request, res: Response): Promise<void> => {
+    const bookings = await BookingService.getAllBookings();
+    res.json(bookings);
 }
 
 export const getBookingByIdController = (req: Request, res: Response): void => {

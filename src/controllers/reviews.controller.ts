@@ -5,16 +5,9 @@ import ReviewValidator from '../validators/review.validator';
 
 let reviews: Review[] = [];
 
-export const getAllReviewsController = (req: Request, res: Response): void => {
-    const reviews = ReviewService.getAllReviews();
-    const validatedReviews = ReviewValidator.validateReviewList(reviews);
-
-    if(!validatedReviews) {
-        res.status(500).json({ message: ReviewValidator.getErrors().join('; ') });
-        return;
-    }
-
-    res.json(validatedReviews);
+export const getAllReviewsController = async (req: Request, res: Response): Promise<void> => {
+    const reviews = await ReviewService.getAllReviews();
+    res.json(reviews);
 }
 
 export const getReviewByIdController = (req: Request, res: Response): void => {

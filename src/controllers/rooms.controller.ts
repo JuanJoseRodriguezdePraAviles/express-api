@@ -5,16 +5,9 @@ import RoomValidator from '../validators/room.validator';
 
 let rooms: Room[] = [];
 
-export const getAllRoomsController = (req: Request, res: Response): void => {
-    const rooms = RoomService.getAllRooms();
-    const validatedRooms = RoomValidator.validateRoomList(rooms);
-
-    if(!validatedRooms) {
-        res.status(500).json({ message: RoomValidator.getErrors().join('; ') });
-        return;
-    }
-
-    res.json(validatedRooms);
+export const getAllRoomsController = async (req: Request, res: Response): Promise<void> => {
+    const rooms = await RoomService.getAllRooms();
+    res.json(rooms);
 }
 
 export const getRoomByIdController = (req: Request, res: Response): void => {
@@ -26,7 +19,7 @@ export const getRoomByIdController = (req: Request, res: Response): void => {
 
     const validatedRoom = RoomValidator.validateRoom(room);
 
-    if(!validatedRoom || validatedRoom._id !== req.params.id) {
+    if (!validatedRoom || validatedRoom._id !== req.params.id) {
         res.status(400).json({ message: RoomValidator.getErrors().join('; ') });
         return;
     }
@@ -34,15 +27,19 @@ export const getRoomByIdController = (req: Request, res: Response): void => {
 }
 
 export const createRoomController = async (req: Request, res: Response): Promise<void> => {
-    const validatedRoom = RoomValidator.validateRoom(req.body);
+    try {
+        const validatedRoom = RoomValidator.validateRoom(req.body);
 
-    if (!RoomValidator.validateRoom) {
-        res.status(400).json({ message: RoomValidator.getErrors().join('; ') });
-        return;
+        if (!validatedRoom) {
+            res.status(400).json({ message: RoomValidator.getErrors().join('; ') });
+            return;
+        }
+
+        const newRoom: Room = await RoomService.createRoom(validatedRoom as Room);
+        res.status(201).json(newRoom);
+    } catch (error:  any) {
+        res.status(500).json({message: 'Error creating room', error: (error as Error).message});
     }
-
-    const newRoom: Room = await RoomService.createRoom(validatedRoom as Room);
-    res.status(201).json(newRoom);
 }
 
 export const updateRoomController = (req: Request, res: Response): void => {
@@ -54,7 +51,6 @@ export const updateRoomController = (req: Request, res: Response): void => {
     }
 
     const validatedRoom = RoomValidator.validateRoom(updatedRoom);
-
     if (!validatedRoom || validatedRoom._id !== req.params.id) {
         res.status(400).json({ message: RoomValidator.getErrors().join('; ') });
         return;
@@ -66,7 +62,7 @@ export const updateRoomController = (req: Request, res: Response): void => {
 export const deleteRoomController = async (req: Request, res: Response): Promise<void> => {
     const sucess = await RoomService.deleteRoom(req.params.id);
 
-    if (!sucess){
+    if (!sucess) {
         res.status(404).json({ message: RoomValidator.getErrors().join('; ') });
         return;
     }

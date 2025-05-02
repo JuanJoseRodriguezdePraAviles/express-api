@@ -1,4 +1,5 @@
 import { Room } from "../interfaces/Room";
+import { RoomStatus } from "../interfaces/RoomStatus";
 
 export default class RoomValidator {
     static errors: string[] = [];
@@ -8,29 +9,31 @@ export default class RoomValidator {
 
         if (!room || typeof room !== 'object') {
             this.errors.push("Invalid object room");
+            return false;
         }
-    
-        if ('_id' in room && typeof room.room_id !== 'string') {
+        if ('_id' in room && typeof room._id !== 'string') {
             this.errors.push("Invalid room ID");
         }
         if ('room_name' in room && typeof room.room_name !== 'string') {
             this.errors.push("Invalid room name");
         }
-    
         if ('room_type' in room && typeof room.room_type !== 'string') {
             this.errors.push("Invalid room type");
         }
         if ('room_floor' in room && typeof room.room_floor !== 'string') {
             this.errors.push("Invalid room floor");
         }
-        if ('status' in room && typeof room.status !== 'string') {
-            this.errors.push("Invalid room status");
+        if ('status' in room) {
+            if (typeof room.status !== 'string') {
+                this.errors.push("Room status must be a string");
+            } else if (!Object.values(RoomStatus).includes(room.status as RoomStatus)) {
+                this.errors.push("Invalid room status");
+            }
         }
         if ('description' in room && typeof room.description !== 'string') {
             this.errors.push("Invalid room description");
-        };
-    
-        if ('photos' in room && room.photos !== null && !Array.isArray(room.photos)) {
+        }
+        if ('photos' in room && !Array.isArray(room.photos)) {
             this.errors.push("Invalid room photos array");
         }
         if ('offer' in room && typeof room.offer !== 'boolean') {
@@ -48,24 +51,37 @@ export default class RoomValidator {
         if ('room_amenities' in room && !Array.isArray(room.room_amenities)) {
             this.errors.push("Invalid room amenities");
         }
-    
+
         return this.errors.length === 0 ? room as Room : false;
     }
-    
+
     public static validateRoomList = (data: any): Room[] | false => {
+        this.errors = [];
+
         if (!Array.isArray(data)) {
-            this.errors.push("Invalid room list");
+            this.errors.push("Invalid room list (not an array)");
             return false;
         }
-    
+
         const validatedRooms: Room[] = [];
-    
-        for (const item of data) {
-            const validRoom = this.validateRoom(item);
-            if (!validRoom) continue;
-            validatedRooms.push(validRoom);
+        const roomErrors: string[] = [];
+
+        for (let i=0; i < data.length; i++) {
+            this.errors = [];
+            const validRoom = this.validateRoom(data[i]);
+            if (!validRoom) {
+                roomErrors.push(`Room at index ${i} failed validation: ${this.errors.join(', ')}`);
+            } else {
+                validatedRooms.push(validRoom);
+            }
         }
-        return validatedRooms.length === 0? false : validatedRooms;
+
+        if(validatedRooms.length === 0) {
+            this.errors = roomErrors;
+            return false;
+        }
+
+        return validatedRooms.length === 0 ? false : validatedRooms;
     }
 
     public static getErrors = (): string[] => {

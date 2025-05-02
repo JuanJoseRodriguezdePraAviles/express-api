@@ -8,6 +8,7 @@ import { RoomModel } from '../schemas/room.schema';
 import { ReviewModel } from '../schemas/review.schema';
 import { EmployeeModel } from '../schemas/employee.schema';
 import { createRandomBooking } from './fake.bookings';
+import bcrypt from 'bcryptjs';
 
 dotenv.config();
 
@@ -31,6 +32,19 @@ export async function seed() {
 
         await EmployeeModel.deleteMany();
         const resultEmployee = await generateEmployees(10);
+
+        const testEmployee = {
+            name: "Test user",
+            email: "test@example.com",
+            password: await bcrypt.hash("test1234", 10),
+            job_functions: "Testing",
+            registration_date: new Date(),
+            phone: "555-555-555",
+            schelude: "9-15",
+            status: true
+        }
+        resultEmployee.push(testEmployee);
+
         await EmployeeModel.insertMany(resultEmployee);
         console.log(`${resultReview.length} inserted employees`);
 

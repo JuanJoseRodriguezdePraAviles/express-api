@@ -5,15 +5,9 @@ import EmployeeValidator from '../validators/employee.validator';
 
 let employees: Employee[] = [];
 
-export const getAllEmployeesController = (req: Request, res: Response): void => {
-    const employees = EmployeeService.getAllEmployees();
-    const validatedEmployees = EmployeeValidator.validateEmployeeList(employees);
-    if(!validatedEmployees) {
-        res.status(500).json({ message: EmployeeValidator.getErrors().join('; ') });
-        return;
-    }
-
-    res.json(validatedEmployees);
+export const getAllEmployeesController = async (req: Request, res: Response): Promise<void> => {
+    const employees = await EmployeeService.getAllEmployees();
+    res.json(employees);
 }
 
 export const getEmployeeByIdController = (req: Request, res: Response): void => {
