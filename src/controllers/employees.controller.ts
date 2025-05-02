@@ -19,7 +19,7 @@ export const getEmployeeByIdController = (req: Request, res: Response): void => 
 
     const validatedEmployee = EmployeeValidator.validateEmployee(employee);
 
-    if(!validatedEmployee || validatedEmployee._id !== req.params.id) {
+    if (!validatedEmployee || validatedEmployee._id !== req.params.id) {
         res.status(400).json({ message: EmployeeValidator.getErrors().join('; ') });
         return;
     }
@@ -27,15 +27,20 @@ export const getEmployeeByIdController = (req: Request, res: Response): void => 
 }
 
 export const createEmployeeController = async (req: Request, res: Response): Promise<void> => {
-    const validatedEmployee = EmployeeValidator.validateEmployee(req.body);
+    try {
+        const validatedEmployee = EmployeeValidator.validateEmployee(req.body);
 
-    if (!EmployeeValidator.validateEmployee) {
-        res.status(400).json({ message: EmployeeValidator.getErrors().join('; ') });
-        return;
+        if (!EmployeeValidator.validateEmployee) {
+            res.status(400).json({ message: EmployeeValidator.getErrors().join('; ') });
+            return;
+        }
+
+        const newEmployee: Employee = await EmployeeService.createEmployee(validatedEmployee as Employee);
+        res.status(201).json(newEmployee);
+    } catch (error: any) {
+        res.status(500).json({message: 'Error creating employee', error: (error as Error).message});
     }
-
-    const newEmployee: Employee = await EmployeeService.createEmployee(validatedEmployee as Employee);
-    res.status(201).json(newEmployee);
+    
 }
 
 export const updateEmployeeController = (req: Request, res: Response): void => {
@@ -59,7 +64,7 @@ export const updateEmployeeController = (req: Request, res: Response): void => {
 export const deleteEmployeeController = async (req: Request, res: Response): Promise<void> => {
     const success = await EmployeeService.deleteEmployee(req.params.id);
 
-    if (!success){
+    if (!success) {
         res.status(404).json({ message: EmployeeValidator.getErrors().join('; ') });
         return;
     }

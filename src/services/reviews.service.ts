@@ -13,12 +13,16 @@ export const getReviewById = async (id: string): Promise<Review | null> => {
 }
 
 export const createReview = async (newReview: Review): Promise<Review> => {
-    const review = new ReviewModel({
-        ...newReview,
-        id: Date.now().toString()
-    });
-    await review.save();
-    return review;
+    try {
+        const review = new ReviewModel({
+            ...newReview,
+            id: Date.now().toString()
+        });
+        await review.save();
+        return review;
+    } catch(error) {
+        throw error;
+    }
 }
 
 export const updateReview = async (id: string, updateReview: Partial<Review>): Promise<Review | null> => {

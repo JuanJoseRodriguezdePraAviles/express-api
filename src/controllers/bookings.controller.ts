@@ -13,13 +13,13 @@ export const getAllBookingsController = async (req: Request, res: Response): Pro
 export const getBookingByIdController = (req: Request, res: Response): void => {
     const booking = BookingService.getBookingById(req.params.id);
     if (!booking) {
-        res.status(404).json({ message: BookingValidator.getErrors().join('; ')});
+        res.status(404).json({ message: BookingValidator.getErrors().join('; ') });
         return;
     }
 
     const validatedBooking = BookingValidator.validateBooking(booking);
 
-    if(!validatedBooking || validatedBooking._id !== req.params.id) {
+    if (!validatedBooking || validatedBooking._id !== req.params.id) {
         res.status(400).json({ message: BookingValidator.getErrors().join('; ') });
         return;
     }
@@ -27,15 +27,20 @@ export const getBookingByIdController = (req: Request, res: Response): void => {
 }
 
 export const createBookingController = async (req: Request, res: Response): Promise<void> => {
-    const validatedBooking = BookingValidator.validateBooking(req.body);
+    try {
+        const validatedBooking = BookingValidator.validateBooking(req.body);
 
-    if (!BookingValidator.validateBooking) {
-        res.status(400).json({ message: BookingValidator.getErrors().join('; ') });
-        return;
+        if (!validatedBooking) {
+            res.status(400).json({ message: BookingValidator.getErrors().join('; ') });
+            return;
+        }
+
+        const newBooking: Booking = await BookingService.createBooking(validatedBooking as Booking);
+        res.status(201).json(newBooking);
+    } catch (error: any) {
+        res.status(500).json({message: 'Error creating booking', error: (error as Error).message});
     }
-
-    const newBooking: Booking = await BookingService.createBooking(validatedBooking as Booking);
-    res.status(201).json(newBooking);
+    
 }
 
 export const updateBookingController = (req: Request, res: Response): void => {
@@ -59,8 +64,8 @@ export const updateBookingController = (req: Request, res: Response): void => {
 export const deleteBookingController = async (req: Request, res: Response): Promise<void> => {
     const success = await BookingService.deleteBooking(req.params.id);
 
-    if (!success){
-        res.status(404).json({ message: BookingValidator.getErrors().join('; ')});
+    if (!success) {
+        res.status(404).json({ message: BookingValidator.getErrors().join('; ') });
         return;
     }
 

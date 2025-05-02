@@ -7,31 +7,35 @@ export const getAllEmployees = async (): Promise<Employee[]> => {
 }
 
 export const getEmployeeById = async (id: string): Promise<Employee | null> => {
-    const employee = await EmployeeModel.findOne({id: id});
+    const employee = await EmployeeModel.findOne({ id: id });
     return employee;
 }
 
 export const createEmployee = async (newEmployee: Employee): Promise<Employee> => {
-    const employee = new EmployeeModel({
-        ...newEmployee,
-        id: Date.now().toString()
-    });
-    await employee.save();
-    return employee;
+    try {
+        const employee = new EmployeeModel({
+            ...newEmployee,
+            id: Date.now().toString()
+        });
+        await employee.save();
+        return employee;
+    } catch(error) {
+        throw error;
+    }
 }
 
 export const updateEmployee = async (id: string, updateEmployee: Partial<Employee>): Promise<Employee | null> => {
     const employee = await EmployeeModel.findOneAndUpdate(
-        {booking_id: id},
+        { booking_id: id },
         updateEmployee,
-        {new: true}
+        { new: true }
     );
     return employee;
 }
 
 export const deleteEmployee = async (id: string): Promise<boolean> => {
-    const deleted = await EmployeeModel.findByIdAndDelete({id: id});
-    if(!deleted) {
+    const deleted = await EmployeeModel.findByIdAndDelete({ id: id });
+    if (!deleted) {
         return false;
     }
     return true;

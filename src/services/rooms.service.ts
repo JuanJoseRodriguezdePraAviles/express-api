@@ -4,12 +4,11 @@ import RoomValidator from '../validators/room.validator';
 
 export const getAllRooms = async (): Promise<Room[]> => {
     const rooms = await RoomModel.find();
-    console.log('rooms list', rooms);
     return rooms;
 }
 
 export const getRoomById = async (id: string): Promise<Room | null> => {
-    const room = await RoomModel.findOne({ room_id: id });
+    const room = await RoomModel.findOne({ _id: id });
     return room;
 }
 

@@ -1,5 +1,6 @@
 import { BookingModel } from '../schemas/booking.schema';
 import { Booking } from '../interfaces/Booking';
+import BookingValidator from '../validators/booking.validator';
 
 export const getAllBookings = async (): Promise<Booking[]> => {
     const bookings = await BookingModel.find();
@@ -7,17 +8,27 @@ export const getAllBookings = async (): Promise<Booking[]> => {
 }
 
 export const getBookingById = async (id: string): Promise<Booking | null> => {
-    const booking = await BookingModel.findOne({booking_id: id});
+    const booking = await BookingModel.findOne({_id: id});
     return booking;
 }
 
 export const createBooking = async (newBooking: Partial<Booking>): Promise<Booking> => {
-    const booking = new BookingModel({
-        ...newBooking,
-        booking_id: Date.now().toString()
-    });
-    await booking.save();
-    return booking;
+    try {
+        const validatedBooking = BookingValidator.validateBooking(newBooking);
+
+        if(!validatedBooking) {
+            throw new Error(`Booking validation failed: ${BookingValidator.errors.join(', ')}`);
+        }
+        const booking = new BookingModel({
+            ...newBooking,
+            booking_id: Date.now().toString()
+        });
+        await booking.save();
+        return booking;
+    } catch(error) {
+        throw error;
+    }
+    
 }
 
 export const updateBooking = async (id: string, updateBooking: Partial<Booking>): Promise<Booking | null> => {
