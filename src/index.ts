@@ -5,13 +5,22 @@ import reviewsRouter from './routes/reviews.routes';
 import employeesRouter from './routes/employees.routes';
 import loginRouter from './routes/login.routes';
 import serverless from 'serverless-http';
-import { connectDB } from './config/database'; 
+import { connectDB } from './config/database';
+import cors from 'cors'; 
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 connectDB();
 
+const allowedOrigins = ['http://localhost:5173'];
+
+const corsOptions = {
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/api/v1/rooms", roomsRouter);
 app.use("/api/v1/bookings", bookingsRouter);
