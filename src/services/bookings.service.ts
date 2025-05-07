@@ -27,7 +27,6 @@ export const createBooking = async (newBooking: Partial<Booking>): Promise<Booki
     } catch(error) {
         throw error;
     }
-    
 }
 
 export const updateBooking = async (id: string, updateBooking: Partial<Booking>): Promise<Booking | null> => {

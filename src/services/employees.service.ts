@@ -1,5 +1,7 @@
 import { EmployeeModel } from '../schemas/employee.schema';
 import { Employee } from '../interfaces/Employee';
+import EmployeeValidator from '../validators/employee.validator';
+import BookingValidator from '../validators/booking.validator';
 
 export const getAllEmployees = async (): Promise<Employee[]> => {
     const employees = await EmployeeModel.find();
@@ -11,8 +13,13 @@ export const getEmployeeById = async (id: string): Promise<Employee | null> => {
     return employee;
 }
 
-export const createEmployee = async (newEmployee: Employee): Promise<Employee> => {
+export const createEmployee = async (newEmployee: Partial<Employee>): Promise<Employee> => {
     try {
+        const validatedEmployee = EmployeeValidator.validateEmployee(newEmployee);
+        
+        if(!validatedEmployee) {
+            throw new Error(`Employee validation failed: ${BookingValidator.errors.join(', ')}`);
+        }
         const employee = new EmployeeModel({
             ...newEmployee
         });
@@ -33,7 +40,7 @@ export const updateEmployee = async (id: string, updateEmployee: Partial<Employe
 }
 
 export const deleteEmployee = async (id: string): Promise<boolean> => {
-    const deleted = await EmployeeModel.findByIdAndDelete({ id: id });
+    const deleted = await EmployeeModel.findByIdAndDelete({ _id: id });
     if (!deleted) {
         return false;
     }

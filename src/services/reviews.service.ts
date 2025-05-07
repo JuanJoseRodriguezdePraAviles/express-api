@@ -34,7 +34,7 @@ export const updateReview = async (id: string, updateReview: Partial<Review>): P
 }
 
 export const deleteReview = async (id: string): Promise<boolean> => {
-    const deleted = await ReviewModel.findOneAndDelete({id: id});
+    const deleted = await ReviewModel.findOneAndDelete({_id: id});
     if(!deleted) {
         return false;
     }

@@ -29,13 +29,13 @@ export const getEmployeeByIdController = (req: Request, res: Response): void => 
 export const createEmployeeController = async (req: Request, res: Response): Promise<void> => {
     try {
         const validatedEmployee = EmployeeValidator.validateEmployee(req.body);
-
-        if (!EmployeeValidator.validateEmployee) {
+        
+        if (!validatedEmployee) {
             res.status(400).json({ message: EmployeeValidator.getErrors().join('; ') });
             return;
         }
-
         const newEmployee: Employee = await EmployeeService.createEmployee(validatedEmployee as Employee);
+        
         res.status(201).json(newEmployee);
     } catch (error: any) {
         res.status(500).json({message: 'Error creating employee', error: (error as Error).message});

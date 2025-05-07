@@ -5,7 +5,7 @@ export default class EmployeeValidator {
 
     public static validateEmployee = (employee: any): Employee | false => {
         this.errors = [];
-
+        
         if (!employee || typeof employee !== 'object') {
             this.errors.push("Invalid object employee");
         }
