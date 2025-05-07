@@ -33,7 +33,7 @@ export const createBooking = async (newBooking: Partial<Booking>): Promise<Booki
 
 export const updateBooking = async (id: string, updateBooking: Partial<Booking>): Promise<Booking | null> => {
     const booking = await BookingModel.findOneAndUpdate(
-        {booking_id: id},
+        {_id: id},
         updateBooking,
         {new: true}
     );
@@ -41,7 +41,7 @@ export const updateBooking = async (id: string, updateBooking: Partial<Booking>)
 }
 
 export const deleteBooking = async (id: string): Promise<boolean> => {
-    const deleted = await BookingModel.findOneAndDelete({booking_id: id});
+    const deleted = await BookingModel.findOneAndDelete({_id: id});
     if(!deleted) {
         return false;
     }

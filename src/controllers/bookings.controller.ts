@@ -43,22 +43,17 @@ export const createBookingController = async (req: Request, res: Response): Prom
     
 }
 
-export const updateBookingController = (req: Request, res: Response): void => {
-    const updatedBooking = BookingService.updateBooking(req.params.id, req.body)
+export const updateBookingController = async (req: Request, res: Response): Promise<void> => {
+    const validatedBooking = BookingValidator.validateBooking(req.body);
 
-    if (!updatedBooking) {
+    if (!validatedBooking) {
         res.status(404).json({ message: BookingValidator.getErrors().join('; ') });
         return;
     }
+    console.log(validatedBooking);
+    const updatedBooking = await BookingService.updateBooking(req.params.id, validatedBooking);
 
-    const validatedBooking = BookingValidator.validateBooking(updatedBooking);
-
-    if (!validatedBooking || validatedBooking._id !== req.params.id) {
-        res.status(400).json({ message: BookingValidator.getErrors().join('; ') });
-        return;
-    }
-
-    res.json(validatedBooking);
+    res.json(updatedBooking);
 }
 
 export const deleteBookingController = async (req: Request, res: Response): Promise<void> => {
