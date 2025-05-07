@@ -49,7 +49,7 @@ export default class BookingValidator {
     public static validateBookingList = (data: any): Booking[] | false => {
         if (!Array.isArray(data)) {
             this.errors.push("Invalid booking list");
-            return false
+            return false;
         }
         
         const validatedBookings: Booking[] = [];

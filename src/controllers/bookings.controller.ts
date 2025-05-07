@@ -10,7 +10,7 @@ export const getAllBookingsController = async (req: Request, res: Response): Pro
     res.json(bookings);
 }
 
-export const getBookingByIdController = (req: Request, res: Response): void => {
+export const getBookingByIdController = async (req: Request, res: Response): Promise<void> => {
     const booking = BookingService.getBookingById(req.params.id);
     if (!booking) {
         res.status(404).json({ message: BookingValidator.getErrors().join('; ') });
@@ -50,7 +50,6 @@ export const updateBookingController = async (req: Request, res: Response): Prom
         res.status(404).json({ message: BookingValidator.getErrors().join('; ') });
         return;
     }
-    console.log(validatedBooking);
     const updatedBooking = await BookingService.updateBooking(req.params.id, validatedBooking);
 
     res.json(updatedBooking);

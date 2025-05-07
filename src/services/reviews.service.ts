@@ -15,8 +15,7 @@ export const getReviewById = async (id: string): Promise<Review | null> => {
 export const createReview = async (newReview: Review): Promise<Review> => {
     try {
         const review = new ReviewModel({
-            ...newReview,
-            id: Date.now().toString()
+            ...newReview
         });
         await review.save();
         return review;
@@ -27,7 +26,7 @@ export const createReview = async (newReview: Review): Promise<Review> => {
 
 export const updateReview = async (id: string, updateReview: Partial<Review>): Promise<Review | null> => {
     const review = await ReviewModel.findOneAndUpdate(
-        {id: id},
+        {_id: id},
         updateReview,
         {new: true}
     );

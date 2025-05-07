@@ -20,8 +20,7 @@ export const createBooking = async (newBooking: Partial<Booking>): Promise<Booki
             throw new Error(`Booking validation failed: ${BookingValidator.errors.join(', ')}`);
         }
         const booking = new BookingModel({
-            ...newBooking,
-            booking_id: Date.now().toString()
+            ...newBooking
         });
         await booking.save();
         return booking;

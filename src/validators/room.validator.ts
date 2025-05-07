@@ -6,10 +6,8 @@ export default class RoomValidator {
 
     public static validateRoom = (room: any): Room | false => {
         this.errors = [];
-
         if (!room || typeof room !== 'object') {
             this.errors.push("Invalid object room");
-            return false;
         }
         if ('_id' in room && typeof room._id !== 'string') {
             this.errors.push("Invalid room ID");
@@ -51,34 +49,22 @@ export default class RoomValidator {
         if ('room_amenities' in room && !Array.isArray(room.room_amenities)) {
             this.errors.push("Invalid room amenities");
         }
-
+        console.log(this.errors);
         return this.errors.length === 0 ? room as Room : false;
     }
 
     public static validateRoomList = (data: any): Room[] | false => {
-        this.errors = [];
-
         if (!Array.isArray(data)) {
             this.errors.push("Invalid room list (not an array)");
             return false;
         }
 
         const validatedRooms: Room[] = [];
-        const roomErrors: string[] = [];
 
-        for (let i=0; i < data.length; i++) {
-            this.errors = [];
-            const validRoom = this.validateRoom(data[i]);
-            if (!validRoom) {
-                roomErrors.push(`Room at index ${i} failed validation: ${this.errors.join(', ')}`);
-            } else {
-                validatedRooms.push(validRoom);
-            }
-        }
-
-        if(validatedRooms.length === 0) {
-            this.errors = roomErrors;
-            return false;
+        for (const item of data) {
+            const validRoom = this.validateRoom(item);
+            if (!validRoom) continue;
+            validatedRooms.push(validRoom);
         }
 
         return validatedRooms.length === 0 ? false : validatedRooms;

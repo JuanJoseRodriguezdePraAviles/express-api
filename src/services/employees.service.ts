@@ -14,8 +14,7 @@ export const getEmployeeById = async (id: string): Promise<Employee | null> => {
 export const createEmployee = async (newEmployee: Employee): Promise<Employee> => {
     try {
         const employee = new EmployeeModel({
-            ...newEmployee,
-            id: Date.now().toString()
+            ...newEmployee
         });
         await employee.save();
         return employee;
@@ -26,7 +25,7 @@ export const createEmployee = async (newEmployee: Employee): Promise<Employee> =
 
 export const updateEmployee = async (id: string, updateEmployee: Partial<Employee>): Promise<Employee | null> => {
     const employee = await EmployeeModel.findOneAndUpdate(
-        { booking_id: id },
+        { _id: id },
         updateEmployee,
         { new: true }
     );

@@ -15,14 +15,13 @@ export const getRoomById = async (id: string): Promise<Room | null> => {
 export const createRoom = async (newRoom: Partial<Room>): Promise<Room> => {
     try {
         const validatedRoom = RoomValidator.validateRoom(newRoom);
-
+        console.log(validatedRoom);
         if (!validatedRoom) {
             throw new Error(`Room validation failed: ${RoomValidator.errors.join(', ')}`);
         }
 
         const room = new RoomModel({
             ...newRoom,
-            room_id: Date.now().toString()
         });
         await room.save();
         return room;
@@ -34,7 +33,7 @@ export const createRoom = async (newRoom: Partial<Room>): Promise<Room> => {
 
 export const updateRoom = async (id: string, updateRoom: Partial<Room>): Promise<Room | null> => {
     const room = await RoomModel.findOneAndUpdate(
-        { room_id: id },
+        { _id: id },
         updateRoom,
         { new: true }
     );
