@@ -41,7 +41,7 @@ export const updateRoom = async (id: string, updateRoom: Partial<Room>): Promise
 }
 
 export const deleteRoom = async (id: string): Promise<boolean> => {
-    const deleted = await RoomModel.findOneAndDelete({ room_id: id });
+    const deleted = await RoomModel.findOneAndDelete({ _id: id });
     if (!deleted) {
         return false;
     }
