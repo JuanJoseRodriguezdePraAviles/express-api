@@ -2,6 +2,7 @@ import { EmployeeModel } from '../schemas/employee.schema';
 import { Employee } from '../interfaces/Employee';
 import EmployeeValidator from '../validators/employee.validator';
 import BookingValidator from '../validators/booking.validator';
+import bcrypt from 'bcryptjs';
 
 export const getAllEmployees = async (): Promise<Employee[]> => {
     const employees = await EmployeeModel.find();
@@ -13,7 +14,7 @@ export const getEmployeeById = async (id: string): Promise<Employee | null> => {
     return employee;
 }
 
-export const createEmployee = async (newEmployee: Partial<Employee>): Promise<Employee> => {
+export const createEmployee = async (newEmployee: Employee): Promise<Employee> => {
     try {
         const validatedEmployee = EmployeeValidator.validateEmployee(newEmployee);
         
@@ -21,7 +22,8 @@ export const createEmployee = async (newEmployee: Partial<Employee>): Promise<Em
             throw new Error(`Employee validation failed: ${BookingValidator.errors.join(', ')}`);
         }
         const employee = new EmployeeModel({
-            ...newEmployee
+            ...newEmployee,
+            password: await bcrypt.hash(newEmployee.password, 10)
         });
         await employee.save();
         return employee;

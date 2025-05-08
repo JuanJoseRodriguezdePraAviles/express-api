@@ -43,22 +43,17 @@ export const createEmployeeController = async (req: Request, res: Response): Pro
     
 }
 
-export const updateEmployeeController = (req: Request, res: Response): void => {
-    const updatedEmployee = EmployeeService.updateEmployee(req.params.id, req.body)
+export const updateEmployeeController = async (req: Request, res: Response): Promise<void> => {
+    const validatedEmployee = EmployeeValidator.validateEmployee(req.body);
 
-    if (!updatedEmployee) {
+    if (!validatedEmployee) {
         res.status(404).json({ message: EmployeeValidator.getErrors().join('; ') });
         return;
     }
 
-    const validatedEmployee = EmployeeValidator.validateEmployee(updatedEmployee);
+    const updatedEmployee = await EmployeeService.updateEmployee(req.params.id, validatedEmployee);
 
-    if (!validatedEmployee || validatedEmployee._id !== req.params.id) {
-        res.status(400).json({ message: EmployeeValidator.getErrors().join('; ') });
-        return;
-    }
-
-    res.json(validatedEmployee);
+    res.json(updatedEmployee);
 }
 
 export const deleteEmployeeController = async (req: Request, res: Response): Promise<void> => {

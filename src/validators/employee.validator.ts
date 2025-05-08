@@ -18,6 +18,9 @@ export default class EmployeeValidator {
         if (!('email' in employee) || typeof employee.email !== 'string') {
             this.errors.push("Missing or Invalid employee email");
         }
+        if (!('password' in employee) || typeof employee.password !== 'string') {
+            this.errors.push("Missing or Invalid employee password");
+        }
         if ('job_functions' in employee && typeof employee.job_functions !== 'string') {
             this.errors.push("Invalid employee job functions");
         }
