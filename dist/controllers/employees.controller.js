@@ -40,14 +40,9 @@ exports.deleteEmployeeController = exports.updateEmployeeController = exports.cr
 const EmployeeService = __importStar(require("../services/employees.service"));
 const employee_validator_1 = __importDefault(require("../validators/employee.validator"));
 let employees = [];
-const getAllEmployeesController = (req, res) => {
-    const employees = EmployeeService.getAllEmployees();
-    const validatedEmployees = employee_validator_1.default.validateEmployeeList(employees);
-    if (!validatedEmployees) {
-        res.status(500).json({ message: employee_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    res.json(validatedEmployees);
+const getAllEmployeesController = async (req, res) => {
+    const employees = await EmployeeService.getAllEmployees();
+    res.json(employees);
 };
 exports.getAllEmployeesController = getAllEmployeesController;
 const getEmployeeByIdController = (req, res) => {
@@ -57,48 +52,44 @@ const getEmployeeByIdController = (req, res) => {
         return;
     }
     const validatedEmployee = employee_validator_1.default.validateEmployee(employee);
-    if (!validatedEmployee || validatedEmployee.id !== req.params.id) {
+    if (!validatedEmployee || validatedEmployee._id !== req.params.id) {
         res.status(400).json({ message: employee_validator_1.default.getErrors().join('; ') });
         return;
     }
     res.json(validatedEmployee);
 };
 exports.getEmployeeByIdController = getEmployeeByIdController;
-const createEmployeeController = (req, res) => {
-    const validatedEmployee = employee_validator_1.default.validateEmployee(req.body);
-    if (!employee_validator_1.default.validateEmployee) {
-        res.status(400).json({ message: employee_validator_1.default.getErrors().join('; ') });
-        return;
+const createEmployeeController = async (req, res) => {
+    try {
+        const validatedEmployee = employee_validator_1.default.validateEmployee(req.body);
+        if (!validatedEmployee) {
+            res.status(400).json({ message: employee_validator_1.default.getErrors().join('; ') });
+            return;
+        }
+        const newEmployee = await EmployeeService.createEmployee(validatedEmployee);
+        res.status(201).json(newEmployee);
     }
-    const newEmployee = EmployeeService.createEmployee(validatedEmployee);
-    res.status(201).json(newEmployee);
+    catch (error) {
+        res.status(500).json({ message: 'Error creating employee', error: error.message });
+    }
 };
 exports.createEmployeeController = createEmployeeController;
-const updateEmployeeController = (req, res) => {
-    const updatedEmployee = EmployeeService.updateEmployee(req.params.id, req.body);
-    if (!updatedEmployee) {
+const updateEmployeeController = async (req, res) => {
+    const validatedEmployee = employee_validator_1.default.validateEmployee(req.body);
+    if (!validatedEmployee) {
         res.status(404).json({ message: employee_validator_1.default.getErrors().join('; ') });
         return;
     }
-    const validatedEmployee = employee_validator_1.default.validateEmployee(updatedEmployee);
-    if (!validatedEmployee || validatedEmployee.id !== req.params.id) {
-        res.status(400).json({ message: employee_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    res.json(validatedEmployee);
+    const updatedEmployee = await EmployeeService.updateEmployee(req.params.id, validatedEmployee);
+    res.json(updatedEmployee);
 };
 exports.updateEmployeeController = updateEmployeeController;
-const deleteEmployeeController = (req, res) => {
-    const deletedEmployee = EmployeeService.deleteEmployee(req.params.id);
-    if (!deletedEmployee) {
+const deleteEmployeeController = async (req, res) => {
+    const success = await EmployeeService.deleteEmployee(req.params.id);
+    if (!success) {
         res.status(404).json({ message: employee_validator_1.default.getErrors().join('; ') });
         return;
     }
-    const isValid = employee_validator_1.default.validateEmployee(deletedEmployee);
-    if (!isValid || deletedEmployee.id !== req.params.id) {
-        res.status(400).json({ message: employee_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    res.json(deletedEmployee);
+    res.status(204).send();
 };
 exports.deleteEmployeeController = deleteEmployeeController;

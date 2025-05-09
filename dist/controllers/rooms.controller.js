@@ -40,65 +40,58 @@ exports.deleteRoomController = exports.updateRoomController = exports.createRoom
 const RoomService = __importStar(require("../services/rooms.service"));
 const room_validator_1 = __importDefault(require("../validators/room.validator"));
 let rooms = [];
-const getAllRoomsController = (req, res) => {
-    const rooms = RoomService.getAllRooms();
-    const validatedRooms = room_validator_1.default.validateRoomList(rooms);
-    if (!validatedRooms) {
-        res.status(500).json({ message: room_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    res.json(validatedRooms);
+const getAllRoomsController = async (req, res) => {
+    const rooms = await RoomService.getAllRooms();
+    res.json(rooms);
 };
 exports.getAllRoomsController = getAllRoomsController;
-const getRoomByIdController = (req, res) => {
+const getRoomByIdController = async (req, res) => {
     const room = RoomService.getRoomById(req.params.id);
     if (!room) {
         res.status(404).json({ message: room_validator_1.default.getErrors().join('; ') });
         return;
     }
     const validatedRoom = room_validator_1.default.validateRoom(room);
-    if (!validatedRoom || validatedRoom.room_id !== req.params.id) {
+    if (!validatedRoom || validatedRoom._id !== req.params.id) {
         res.status(400).json({ message: room_validator_1.default.getErrors().join('; ') });
         return;
     }
     res.json(validatedRoom);
 };
 exports.getRoomByIdController = getRoomByIdController;
-const createRoomController = (req, res) => {
-    const validatedRoom = room_validator_1.default.validateRoom(req.body);
-    if (!room_validator_1.default.validateRoom) {
-        res.status(400).json({ message: room_validator_1.default.getErrors().join('; ') });
-        return;
+const createRoomController = async (req, res) => {
+    try {
+        const validatedRoom = room_validator_1.default.validateRoom(req.body);
+        console.log(validatedRoom);
+        if (!validatedRoom) {
+            res.status(400).json({ message: room_validator_1.default.getErrors().join('; ') });
+            return;
+        }
+        const newRoom = await RoomService.createRoom(validatedRoom);
+        res.status(201).json(newRoom);
     }
-    const newRoom = RoomService.createRoom(validatedRoom);
-    res.status(201).json(newRoom);
+    catch (error) {
+        res.status(500).json({ message: 'Error creating room', error: error.message });
+    }
 };
 exports.createRoomController = createRoomController;
-const updateRoomController = (req, res) => {
-    const updatedRoom = RoomService.updateRoom(req.params.id, req.body);
-    if (!updatedRoom) {
+const updateRoomController = async (req, res) => {
+    const validatedRoom = room_validator_1.default.validateRoom(req.body);
+    if (!validatedRoom) {
         res.status(404).json({ message: room_validator_1.default.getErrors().join('; ') });
         return;
     }
-    const validatedRoom = room_validator_1.default.validateRoom(updatedRoom);
-    if (!validatedRoom || validatedRoom.room_id !== req.params.id) {
-        res.status(400).json({ message: room_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    res.json(validatedRoom);
+    const updatedRoom = await RoomService.updateRoom(req.params.id, validatedRoom);
+    console.log(updatedRoom);
+    res.json(updatedRoom);
 };
 exports.updateRoomController = updateRoomController;
-const deleteRoomController = (req, res) => {
-    const deletedRoom = RoomService.deleteRoom(req.params.id);
-    if (!deletedRoom) {
+const deleteRoomController = async (req, res) => {
+    const sucess = await RoomService.deleteRoom(req.params.id);
+    if (!sucess) {
         res.status(404).json({ message: room_validator_1.default.getErrors().join('; ') });
         return;
     }
-    const isValid = room_validator_1.default.validateRoom(deletedRoom);
-    if (!isValid || deletedRoom.room_id !== req.params.id) {
-        res.status(400).json({ message: room_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    res.json(deletedRoom);
+    res.status(204).send();
 };
 exports.deleteRoomController = deleteRoomController;

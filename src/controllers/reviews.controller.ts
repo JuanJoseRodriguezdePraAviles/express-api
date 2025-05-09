@@ -16,14 +16,7 @@ export const getReviewByIdController = (req: Request, res: Response): void => {
         res.status(404).json({ message: ReviewValidator.getErrors().join('; ') });
         return;
     }
-
-    const validatedReview = ReviewValidator.validateReview(review);
-
-    if (!validatedReview || validatedReview._id !== req.params.id) {
-        res.status(400).json({ message: ReviewValidator.getErrors().join('; ') });
-        return;
-    }
-    res.json(validatedReview);
+    res.json(review);
 }
 
 export const createReviewController = async (req: Request, res: Response): Promise<void> => {
@@ -65,7 +58,7 @@ export const deleteReviewController = async (req: Request, res: Response): Promi
     const success = ReviewService.deleteReview(req.params.id);
 
     if (!success) {
-        res.status(404).json({ message: ReviewValidator.getErrors().join('; ') });
+        res.status(404).json({ message: 'Delete failed' });
         return;
     }
 

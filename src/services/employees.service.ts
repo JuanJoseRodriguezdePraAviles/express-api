@@ -1,7 +1,5 @@
 import { EmployeeModel } from '../schemas/employee.schema';
 import { Employee } from '../interfaces/Employee';
-import EmployeeValidator from '../validators/employee.validator';
-import BookingValidator from '../validators/booking.validator';
 import bcrypt from 'bcryptjs';
 
 export const getAllEmployees = async (): Promise<Employee[]> => {
@@ -16,11 +14,6 @@ export const getEmployeeById = async (id: string): Promise<Employee | null> => {
 
 export const createEmployee = async (newEmployee: Employee): Promise<Employee> => {
     try {
-        const validatedEmployee = EmployeeValidator.validateEmployee(newEmployee);
-        
-        if(!validatedEmployee) {
-            throw new Error(`Employee validation failed: ${BookingValidator.errors.join(', ')}`);
-        }
         const employee = new EmployeeModel({
             ...newEmployee,
             password: await bcrypt.hash(newEmployee.password, 10)

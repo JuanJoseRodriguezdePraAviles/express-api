@@ -1,6 +1,5 @@
 import { BookingModel } from '../schemas/booking.schema';
 import { Booking } from '../interfaces/Booking';
-import BookingValidator from '../validators/booking.validator';
 
 export const getAllBookings = async (): Promise<Booking[]> => {
     const bookings = await BookingModel.find();
@@ -14,11 +13,6 @@ export const getBookingById = async (id: string): Promise<Booking | null> => {
 
 export const createBooking = async (newBooking: Partial<Booking>): Promise<Booking> => {
     try {
-        const validatedBooking = BookingValidator.validateBooking(newBooking);
-
-        if(!validatedBooking) {
-            throw new Error(`Booking validation failed: ${BookingValidator.errors.join(', ')}`);
-        }
         const booking = new BookingModel({
             ...newBooking
         });

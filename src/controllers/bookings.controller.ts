@@ -12,18 +12,7 @@ export const getAllBookingsController = async (req: Request, res: Response): Pro
 
 export const getBookingByIdController = async (req: Request, res: Response): Promise<void> => {
     const booking = BookingService.getBookingById(req.params.id);
-    if (!booking) {
-        res.status(404).json({ message: BookingValidator.getErrors().join('; ') });
-        return;
-    }
-
-    const validatedBooking = BookingValidator.validateBooking(booking);
-
-    if (!validatedBooking || validatedBooking._id !== req.params.id) {
-        res.status(400).json({ message: BookingValidator.getErrors().join('; ') });
-        return;
-    }
-    res.json(validatedBooking);
+    res.json(booking);
 }
 
 export const createBookingController = async (req: Request, res: Response): Promise<void> => {
@@ -59,7 +48,7 @@ export const deleteBookingController = async (req: Request, res: Response): Prom
     const success = await BookingService.deleteBooking(req.params.id);
 
     if (!success) {
-        res.status(404).json({ message: BookingValidator.getErrors().join('; ') });
+        res.status(404).json({ message: 'Delete failed' });
         return;
     }
 

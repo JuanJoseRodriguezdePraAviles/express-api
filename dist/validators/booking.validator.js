@@ -10,32 +10,14 @@ BookingValidator.validateBooking = (booking) => {
     if (!booking || typeof booking !== 'object') {
         _a.errors.push("Invalid object booking");
     }
-    if ('booking_id' in booking && typeof booking.booking_id !== 'string') {
+    if ('_id' in booking && typeof booking._id !== 'string') {
         _a.errors.push("Invalid booking ID");
     }
-    if ('room_id' in booking && typeof booking.room_id !== 'string') {
-        _a.errors.push("Invalid room ID");
+    if (!('room_id' in booking) || typeof booking.room_id !== 'string') {
+        _a.errors.push("Missing or Invalid room ID");
     }
-    if ('room_name' in booking && typeof booking.room_name !== 'string') {
-        _a.errors.push("Invalid booking room name");
-    }
-    if ('room_description' in booking && typeof booking.room_description !== 'string') {
-        _a.errors.push("Invalid booking room description");
-    }
-    if ('room_type' in booking && typeof booking.room_type !== 'string') {
-        _a.errors.push("Invalid booking room type");
-    }
-    if ('room_price' in booking && typeof booking.room_price !== 'number') {
-        _a.errors.push("Invalid booking room price");
-    }
-    if ('room_status' in booking && typeof booking.room_status !== 'string') {
-        _a.errors.push("Invalid booking room status");
-    }
-    if ('room_amenities' in booking && !Array.isArray(booking.room_amenities)) {
-        _a.errors.push("Invalid booking room amenities");
-    }
-    if ('client_id' in booking && typeof booking.client_id !== 'string') {
-        _a.errors.push("Invalid booking client id");
+    if (!('client_id' in booking) || typeof booking.client_id !== 'string') {
+        _a.errors.push("Missing or Invalid booking client id");
     }
     if ('client_name' in booking && typeof booking.client_name !== 'string') {
         _a.errors.push("Invalid booking client name");

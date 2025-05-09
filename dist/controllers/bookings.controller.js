@@ -40,65 +40,56 @@ exports.deleteBookingController = exports.updateBookingController = exports.crea
 const BookingService = __importStar(require("../services/bookings.service"));
 const booking_validator_1 = __importDefault(require("../validators/booking.validator"));
 let bookings = [];
-const getAllBookingsController = (req, res) => {
-    const bookings = BookingService.getAllBookings();
-    const validatedBookings = booking_validator_1.default.validateBookingList(bookings);
-    if (!validatedBookings) {
-        res.status(500).json({ message: booking_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    res.json(validatedBookings);
+const getAllBookingsController = async (req, res) => {
+    const bookings = await BookingService.getAllBookings();
+    res.json(bookings);
 };
 exports.getAllBookingsController = getAllBookingsController;
-const getBookingByIdController = (req, res) => {
+const getBookingByIdController = async (req, res) => {
     const booking = BookingService.getBookingById(req.params.id);
     if (!booking) {
         res.status(404).json({ message: booking_validator_1.default.getErrors().join('; ') });
         return;
     }
     const validatedBooking = booking_validator_1.default.validateBooking(booking);
-    if (!validatedBooking || validatedBooking.booking_id !== req.params.id) {
+    if (!validatedBooking || validatedBooking._id !== req.params.id) {
         res.status(400).json({ message: booking_validator_1.default.getErrors().join('; ') });
         return;
     }
     res.json(validatedBooking);
 };
 exports.getBookingByIdController = getBookingByIdController;
-const createBookingController = (req, res) => {
-    const validatedBooking = booking_validator_1.default.validateBooking(req.body);
-    if (!booking_validator_1.default.validateBooking) {
-        res.status(400).json({ message: booking_validator_1.default.getErrors().join('; ') });
-        return;
+const createBookingController = async (req, res) => {
+    try {
+        const validatedBooking = booking_validator_1.default.validateBooking(req.body);
+        if (!validatedBooking) {
+            res.status(400).json({ message: booking_validator_1.default.getErrors().join('; ') });
+            return;
+        }
+        const newBooking = await BookingService.createBooking(validatedBooking);
+        res.status(201).json(newBooking);
     }
-    const newBooking = BookingService.createBooking(validatedBooking);
-    res.status(201).json(newBooking);
+    catch (error) {
+        res.status(500).json({ message: 'Error creating booking', error: error.message });
+    }
 };
 exports.createBookingController = createBookingController;
-const updateBookingController = (req, res) => {
-    const updatedBooking = BookingService.updateBooking(req.params.id, req.body);
-    if (!updatedBooking) {
+const updateBookingController = async (req, res) => {
+    const validatedBooking = booking_validator_1.default.validateBooking(req.body);
+    if (!validatedBooking) {
         res.status(404).json({ message: booking_validator_1.default.getErrors().join('; ') });
         return;
     }
-    const validatedBooking = booking_validator_1.default.validateBooking(updatedBooking);
-    if (!validatedBooking || validatedBooking.booking_id !== req.params.id) {
-        res.status(400).json({ message: booking_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    res.json(validatedBooking);
+    const updatedBooking = await BookingService.updateBooking(req.params.id, validatedBooking);
+    res.json(updatedBooking);
 };
 exports.updateBookingController = updateBookingController;
-const deleteBookingController = (req, res) => {
-    const deletedBooking = BookingService.deleteBooking(req.params.id);
-    if (!deletedBooking) {
+const deleteBookingController = async (req, res) => {
+    const success = await BookingService.deleteBooking(req.params.id);
+    if (!success) {
         res.status(404).json({ message: booking_validator_1.default.getErrors().join('; ') });
         return;
     }
-    const isValid = booking_validator_1.default.validateBooking(deletedBooking);
-    if (!isValid || deletedBooking.booking_id !== req.params.id) {
-        res.status(400).json({ message: booking_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    res.json(deletedBooking);
+    res.status(204).send();
 };
 exports.deleteBookingController = deleteBookingController;

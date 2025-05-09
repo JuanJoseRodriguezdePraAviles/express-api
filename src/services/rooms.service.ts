@@ -1,6 +1,5 @@
 import { RoomModel } from '../schemas/room.schema';
 import { Room } from '../interfaces/Room';
-import RoomValidator from '../validators/room.validator';
 
 export const getAllRooms = async (): Promise<Room[]> => {
     const rooms = await RoomModel.find();
@@ -14,12 +13,6 @@ export const getRoomById = async (id: string): Promise<Room | null> => {
 
 export const createRoom = async (newRoom: Partial<Room>): Promise<Room> => {
     try {
-        const validatedRoom = RoomValidator.validateRoom(newRoom);
-        console.log(validatedRoom);
-        if (!validatedRoom) {
-            throw new Error(`Room validation failed: ${RoomValidator.errors.join(', ')}`);
-        }
-
         const room = new RoomModel({
             ...newRoom,
         });

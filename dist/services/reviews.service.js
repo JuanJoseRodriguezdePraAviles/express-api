@@ -1,52 +1,40 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteReview = exports.updateReview = exports.createReview = exports.getReviewById = exports.getAllReviews = void 0;
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
-const reviewsFilePath = path_1.default.join(__dirname, '../../public/Reviews.json');
-const readReviewsFromFile = () => {
-    const fileData = fs_1.default.readFileSync(reviewsFilePath, 'utf-8');
-    return JSON.parse(fileData);
-};
-const getAllReviews = () => {
-    return readReviewsFromFile();
+const review_schema_1 = require("../schemas/review.schema");
+const getAllReviews = async () => {
+    const reviews = await review_schema_1.ReviewModel.find();
+    return reviews;
 };
 exports.getAllReviews = getAllReviews;
-const getReviewById = (id) => {
-    const reviews = readReviewsFromFile();
-    return reviews.find(review => String(review.id) === id);
+const getReviewById = async (id) => {
+    const review = await review_schema_1.ReviewModel.findOne({ id: id });
+    return review;
 };
 exports.getReviewById = getReviewById;
-const createReview = (newReview) => {
-    const reviews = readReviewsFromFile();
-    newReview.id = Date.now().toString();
-    reviews.push(newReview);
-    fs_1.default.writeFileSync(reviewsFilePath, JSON.stringify(reviews, null, 2), 'utf-8');
-    return newReview;
+const createReview = async (newReview) => {
+    try {
+        const review = new review_schema_1.ReviewModel({
+            ...newReview
+        });
+        await review.save();
+        return review;
+    }
+    catch (error) {
+        throw error;
+    }
 };
 exports.createReview = createReview;
-const updateReview = (id, updateReview) => {
-    const reviews = readReviewsFromFile();
-    const index = reviews.findIndex(review => String(review.id) === id);
-    if (index !== -1) {
-        reviews[index] = { ...reviews[index], ...updateReview };
-        fs_1.default.writeFileSync(reviewsFilePath, JSON.stringify(reviews, null, 2), 'utf-8');
-        return reviews[index];
-    }
-    return undefined;
+const updateReview = async (id, updateReview) => {
+    const review = await review_schema_1.ReviewModel.findOneAndUpdate({ _id: id }, updateReview, { new: true });
+    return review;
 };
 exports.updateReview = updateReview;
-const deleteReview = (id) => {
-    const reviews = readReviewsFromFile();
-    const index = reviews.findIndex(review => String(review.id) === id);
-    if (index !== -1) {
-        const deletedReview = reviews.splice(index, 1);
-        fs_1.default.writeFileSync(reviewsFilePath, JSON.stringify(reviews, null, 2), 'utf-8');
-        return deletedReview[0];
+const deleteReview = async (id) => {
+    const deleted = await review_schema_1.ReviewModel.findOneAndDelete({ _id: id });
+    if (!deleted) {
+        return false;
     }
-    return undefined;
+    return true;
 };
 exports.deleteReview = deleteReview;

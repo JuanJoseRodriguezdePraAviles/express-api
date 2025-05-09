@@ -4,49 +4,48 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteEmployee = exports.updateEmployee = exports.createEmployee = exports.getEmployeeById = exports.getAllEmployees = void 0;
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
-const employeesFilePath = path_1.default.join(__dirname, '../../public/Employees.json');
-const readEmployeesFromFile = () => {
-    const fileData = fs_1.default.readFileSync(employeesFilePath, 'utf-8');
-    return JSON.parse(fileData);
-};
-const getAllEmployees = () => {
-    return readEmployeesFromFile();
+const employee_schema_1 = require("../schemas/employee.schema");
+const employee_validator_1 = __importDefault(require("../validators/employee.validator"));
+const booking_validator_1 = __importDefault(require("../validators/booking.validator"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const getAllEmployees = async () => {
+    const employees = await employee_schema_1.EmployeeModel.find();
+    return employees;
 };
 exports.getAllEmployees = getAllEmployees;
-const getEmployeeById = (id) => {
-    const employees = readEmployeesFromFile();
-    return employees.find(employee => String(employee.id) === id);
+const getEmployeeById = async (id) => {
+    const employee = await employee_schema_1.EmployeeModel.findOne({ id: id });
+    return employee;
 };
 exports.getEmployeeById = getEmployeeById;
-const createEmployee = (newEmployee) => {
-    const employees = readEmployeesFromFile();
-    newEmployee.id = Date.now().toString();
-    employees.push(newEmployee);
-    fs_1.default.writeFileSync(employeesFilePath, JSON.stringify(employees, null, 2), 'utf-8');
-    return newEmployee;
+const createEmployee = async (newEmployee) => {
+    try {
+        const validatedEmployee = employee_validator_1.default.validateEmployee(newEmployee);
+        if (!validatedEmployee) {
+            throw new Error(`Employee validation failed: ${booking_validator_1.default.errors.join(', ')}`);
+        }
+        const employee = new employee_schema_1.EmployeeModel({
+            ...newEmployee,
+            password: await bcryptjs_1.default.hash(newEmployee.password, 10)
+        });
+        await employee.save();
+        return employee;
+    }
+    catch (error) {
+        throw error;
+    }
 };
 exports.createEmployee = createEmployee;
-const updateEmployee = (id, updateEmployee) => {
-    const employees = readEmployeesFromFile();
-    const index = employees.findIndex(employee => String(employee.id) === id);
-    if (index !== -1) {
-        employees[index] = { ...employees[index], ...updateEmployee };
-        fs_1.default.writeFileSync(employeesFilePath, JSON.stringify(employees, null, 2), 'utf-8');
-        return employees[index];
-    }
-    return undefined;
+const updateEmployee = async (id, updateEmployee) => {
+    const employee = await employee_schema_1.EmployeeModel.findOneAndUpdate({ _id: id }, updateEmployee, { new: true });
+    return employee;
 };
 exports.updateEmployee = updateEmployee;
-const deleteEmployee = (id) => {
-    const employees = readEmployeesFromFile();
-    const index = employees.findIndex(employee => String(employee.id) === id);
-    if (index !== -1) {
-        const deletedEmployee = employees.splice(index, 1);
-        fs_1.default.writeFileSync(employeesFilePath, JSON.stringify(employees, null, 2), 'utf-8');
-        return deletedEmployee[0];
+const deleteEmployee = async (id) => {
+    const deleted = await employee_schema_1.EmployeeModel.findByIdAndDelete({ _id: id });
+    if (!deleted) {
+        return false;
     }
-    return undefined;
+    return true;
 };
 exports.deleteEmployee = deleteEmployee;

@@ -12,18 +12,7 @@ export const getAllEmployeesController = async (req: Request, res: Response): Pr
 
 export const getEmployeeByIdController = (req: Request, res: Response): void => {
     const employee = EmployeeService.getEmployeeById(req.params.id);
-    if (!employee) {
-        res.status(404).json({ message: EmployeeValidator.getErrors().join('; ') });
-        return;
-    }
-
-    const validatedEmployee = EmployeeValidator.validateEmployee(employee);
-
-    if (!validatedEmployee || validatedEmployee._id !== req.params.id) {
-        res.status(400).json({ message: EmployeeValidator.getErrors().join('; ') });
-        return;
-    }
-    res.json(validatedEmployee);
+    res.json(employee);
 }
 
 export const createEmployeeController = async (req: Request, res: Response): Promise<void> => {
@@ -60,9 +49,9 @@ export const deleteEmployeeController = async (req: Request, res: Response): Pro
     const success = await EmployeeService.deleteEmployee(req.params.id);
 
     if (!success) {
-        res.status(404).json({ message: EmployeeValidator.getErrors().join('; ') });
+        res.status(404).json({ message: 'Delete failed' });
         return;
     }
-
+    
     res.status(204).send();
 }

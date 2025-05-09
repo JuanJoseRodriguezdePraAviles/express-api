@@ -40,14 +40,9 @@ exports.deleteReviewController = exports.updateReviewController = exports.create
 const ReviewService = __importStar(require("../services/reviews.service"));
 const review_validator_1 = __importDefault(require("../validators/review.validator"));
 let reviews = [];
-const getAllReviewsController = (req, res) => {
-    const reviews = ReviewService.getAllReviews();
-    const validatedReviews = review_validator_1.default.validateReviewList(reviews);
-    if (!validatedReviews) {
-        res.status(500).json({ message: review_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    res.json(validatedReviews);
+const getAllReviewsController = async (req, res) => {
+    const reviews = await ReviewService.getAllReviews();
+    res.json(reviews);
 };
 exports.getAllReviewsController = getAllReviewsController;
 const getReviewByIdController = (req, res) => {
@@ -57,21 +52,26 @@ const getReviewByIdController = (req, res) => {
         return;
     }
     const validatedReview = review_validator_1.default.validateReview(review);
-    if (!validatedReview || validatedReview.id !== req.params.id) {
+    if (!validatedReview || validatedReview._id !== req.params.id) {
         res.status(400).json({ message: review_validator_1.default.getErrors().join('; ') });
         return;
     }
     res.json(validatedReview);
 };
 exports.getReviewByIdController = getReviewByIdController;
-const createReviewController = (req, res) => {
-    const validatedReview = review_validator_1.default.validateReview(req.body);
-    if (!review_validator_1.default.validateReview) {
-        res.status(400).json({ message: review_validator_1.default.getErrors().join('; ') });
-        return;
+const createReviewController = async (req, res) => {
+    try {
+        const validatedReview = review_validator_1.default.validateReview(req.body);
+        if (!review_validator_1.default.validateReview) {
+            res.status(400).json({ message: review_validator_1.default.getErrors().join('; ') });
+            return;
+        }
+        const newReview = await ReviewService.createReview(validatedReview);
+        res.status(201).json(newReview);
     }
-    const newReview = ReviewService.createReview(validatedReview);
-    res.status(201).json(newReview);
+    catch (error) {
+        res.status(500).json({ message: 'Error creating booking', error: error.message });
+    }
 };
 exports.createReviewController = createReviewController;
 const updateReviewController = (req, res) => {
@@ -81,24 +81,19 @@ const updateReviewController = (req, res) => {
         return;
     }
     const validatedReview = review_validator_1.default.validateReview(updatedReview);
-    if (!validatedReview || validatedReview.id !== req.params.id) {
+    if (!validatedReview || validatedReview._id !== req.params.id) {
         res.status(400).json({ message: review_validator_1.default.getErrors().join('; ') });
         return;
     }
     res.json(validatedReview);
 };
 exports.updateReviewController = updateReviewController;
-const deleteReviewController = (req, res) => {
-    const deletedReview = ReviewService.deleteReview(req.params.id);
-    if (!deletedReview) {
+const deleteReviewController = async (req, res) => {
+    const success = ReviewService.deleteReview(req.params.id);
+    if (!success) {
         res.status(404).json({ message: review_validator_1.default.getErrors().join('; ') });
         return;
     }
-    const isValid = review_validator_1.default.validateReview(deletedReview);
-    if (!isValid || deletedReview.id !== req.params.id) {
-        res.status(400).json({ message: review_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    res.json(deletedReview);
+    res.status(204).send();
 };
 exports.deleteReviewController = deleteReviewController;

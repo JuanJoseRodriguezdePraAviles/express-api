@@ -4,49 +4,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteBooking = exports.updateBooking = exports.createBooking = exports.getBookingById = exports.getAllBookings = void 0;
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
-const bookingsFilePath = path_1.default.join(__dirname, '../../public/Bookings.json');
-const readBookingsFromFile = () => {
-    const fileData = fs_1.default.readFileSync(bookingsFilePath, 'utf-8');
-    return JSON.parse(fileData);
-};
-const getAllBookings = () => {
-    return readBookingsFromFile();
+const booking_schema_1 = require("../schemas/booking.schema");
+const booking_validator_1 = __importDefault(require("../validators/booking.validator"));
+const getAllBookings = async () => {
+    const bookings = await booking_schema_1.BookingModel.find();
+    return bookings;
 };
 exports.getAllBookings = getAllBookings;
-const getBookingById = (id) => {
-    const bookings = readBookingsFromFile();
-    return bookings.find(booking => String(booking.booking_id) === id);
+const getBookingById = async (id) => {
+    const booking = await booking_schema_1.BookingModel.findOne({ _id: id });
+    return booking;
 };
 exports.getBookingById = getBookingById;
-const createBooking = (newBooking) => {
-    const bookings = readBookingsFromFile();
-    newBooking.booking_id = Date.now().toString();
-    bookings.push(newBooking);
-    fs_1.default.writeFileSync(bookingsFilePath, JSON.stringify(bookings, null, 2), 'utf-8');
-    return newBooking;
+const createBooking = async (newBooking) => {
+    try {
+        const validatedBooking = booking_validator_1.default.validateBooking(newBooking);
+        if (!validatedBooking) {
+            throw new Error(`Booking validation failed: ${booking_validator_1.default.errors.join(', ')}`);
+        }
+        const booking = new booking_schema_1.BookingModel({
+            ...newBooking
+        });
+        await booking.save();
+        return booking;
+    }
+    catch (error) {
+        throw error;
+    }
 };
 exports.createBooking = createBooking;
-const updateBooking = (id, updateBooking) => {
-    const bookings = readBookingsFromFile();
-    const index = bookings.findIndex(booking => String(booking.booking_id) === id);
-    if (index !== -1) {
-        bookings[index] = { ...bookings[index], ...updateBooking };
-        fs_1.default.writeFileSync(bookingsFilePath, JSON.stringify(bookings, null, 2), 'utf-8');
-        return bookings[index];
-    }
-    return undefined;
+const updateBooking = async (id, updateBooking) => {
+    const booking = await booking_schema_1.BookingModel.findOneAndUpdate({ _id: id }, updateBooking, { new: true });
+    return booking;
 };
 exports.updateBooking = updateBooking;
-const deleteBooking = (id) => {
-    const bookings = readBookingsFromFile();
-    const index = bookings.findIndex(booking => String(booking.booking_id) === id);
-    if (index !== -1) {
-        const deletedBooking = bookings.splice(index, 1);
-        fs_1.default.writeFileSync(bookingsFilePath, JSON.stringify(bookings, null, 2), 'utf-8');
-        return deletedBooking[0];
+const deleteBooking = async (id) => {
+    const deleted = await booking_schema_1.BookingModel.findOneAndDelete({ _id: id });
+    if (!deleted) {
+        return false;
     }
-    return undefined;
+    return true;
 };
 exports.deleteBooking = deleteBooking;

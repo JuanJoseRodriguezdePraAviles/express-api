@@ -12,18 +12,7 @@ export const getAllRoomsController = async (req: Request, res: Response): Promis
 
 export const getRoomByIdController = async (req: Request, res: Response): Promise<void> => {
     const room = RoomService.getRoomById(req.params.id);
-    if (!room) {
-        res.status(404).json({ message: RoomValidator.getErrors().join('; ') });
-        return;
-    }
-
-    const validatedRoom = RoomValidator.validateRoom(room);
-
-    if (!validatedRoom || validatedRoom._id !== req.params.id) {
-        res.status(400).json({ message: RoomValidator.getErrors().join('; ') });
-        return;
-    }
-    res.json(validatedRoom);
+    res.json(room);
 }
 
 export const createRoomController = async (req: Request, res: Response): Promise<void> => {
@@ -59,7 +48,7 @@ export const deleteRoomController = async (req: Request, res: Response): Promise
     const sucess = await RoomService.deleteRoom(req.params.id);
 
     if (!sucess) {
-        res.status(404).json({ message: RoomValidator.getErrors().join('; ') });
+        res.status(404).json({ message: 'Delete failed' });
         return;
     }
 
