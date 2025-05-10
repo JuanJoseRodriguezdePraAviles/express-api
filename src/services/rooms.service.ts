@@ -21,7 +21,6 @@ export const createRoom = async (newRoom: Partial<Room>): Promise<Room> => {
     } catch(error) {
         throw error;
     }
-    
 }
 
 export const updateRoom = async (id: string, updateRoom: Partial<Room>): Promise<Room | null> => {
