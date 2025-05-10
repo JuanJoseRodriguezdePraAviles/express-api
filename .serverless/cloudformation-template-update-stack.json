@@ -162,7 +162,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/miranda-backend/dev/1746875721683-2025-05-10T11:15:21.683Z/miranda-backend.zip"
+          "S3Key": "serverless/miranda-backend/dev/1746877951047-2025-05-10T11:52:31.047Z/miranda-backend.zip"
         },
         "Handler": "dist/index.handler",
         "Runtime": "nodejs18.x",
@@ -180,14 +180,14 @@
         "AppLogGroup"
       ]
     },
-    "AppLambdaVersionzN6Gv1NtHztyqMErafHf0qkOjUVUMLmbjdpsbDxQ": {
+    "AppLambdaVersionjAFq0VsZWXt3hRzE6tWXmiC7nWlXOOLx2GK3VN36M": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "kFY3K1mICSUqB+A5R2wrMhcnTFlXy4YBBchNuX4aOJE="
+        "CodeSha256": "GL62c/Z4D5iwgq6Fna3vk2R1ERWAonYlAYQrs5Q6nkg="
       }
     },
     "HttpApi": {
@@ -209,7 +209,7 @@
             "OPTIONS"
           ],
           "AllowOrigins": [
-            "http://localhost:5173"
+            "http://hotel-dashboard-96.s3-website.eu-north-1.amazonaws.com"
           ]
         }
       }
@@ -336,7 +336,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionzN6Gv1NtHztyqMErafHf0qkOjUVUMLmbjdpsbDxQ"
+        "Ref": "AppLambdaVersionjAFq0VsZWXt3hRzE6tWXmiC7nWlXOOLx2GK3VN36M"
       },
       "Export": {
         "Name": "sls-miranda-backend-dev-AppLambdaFunctionQualifiedArn"

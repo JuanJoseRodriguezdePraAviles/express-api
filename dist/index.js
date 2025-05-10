@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 3001;
 (0, database_1.connectDB)();
 const allowedOrigins = ['http://localhost:5173'];
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin: 'http://hotel-dashboard-96.s3-website.eu-north-1.amazonaws.com',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 };

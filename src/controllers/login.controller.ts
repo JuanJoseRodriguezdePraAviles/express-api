@@ -22,7 +22,7 @@ export const loginController = async (req: Request, res: Response): Promise<void
         }
         const token = generateAccessToken(employee._id.toString());
 
-        res.status(200).send({
+        res.status(200).json({
             token: token,
             loggedUserID: employee._id
         });
