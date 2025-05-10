@@ -15,7 +15,7 @@ provider:
   httpApi:
     cors:
       allowedOrigins:
-        - "*"
+        - "http://localhost:5173"
       allowedMethods:
         - GET
         - POST
@@ -25,7 +25,7 @@ provider:
       allowedHeaders:
         - Content-Type
         - Authorization
-      allowCredentials: false
+      allowCredentials: true
 functions:
   app:
     handler: dist/index.handler
