@@ -47,16 +47,7 @@ const getAllEmployeesController = async (req, res) => {
 exports.getAllEmployeesController = getAllEmployeesController;
 const getEmployeeByIdController = (req, res) => {
     const employee = EmployeeService.getEmployeeById(req.params.id);
-    if (!employee) {
-        res.status(404).json({ message: employee_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    const validatedEmployee = employee_validator_1.default.validateEmployee(employee);
-    if (!validatedEmployee || validatedEmployee._id !== req.params.id) {
-        res.status(400).json({ message: employee_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    res.json(validatedEmployee);
+    res.json(employee);
 };
 exports.getEmployeeByIdController = getEmployeeByIdController;
 const createEmployeeController = async (req, res) => {
@@ -87,7 +78,7 @@ exports.updateEmployeeController = updateEmployeeController;
 const deleteEmployeeController = async (req, res) => {
     const success = await EmployeeService.deleteEmployee(req.params.id);
     if (!success) {
-        res.status(404).json({ message: employee_validator_1.default.getErrors().join('; ') });
+        res.status(404).json({ message: 'Delete failed' });
         return;
     }
     res.status(204).send();

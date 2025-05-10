@@ -47,16 +47,7 @@ const getAllBookingsController = async (req, res) => {
 exports.getAllBookingsController = getAllBookingsController;
 const getBookingByIdController = async (req, res) => {
     const booking = BookingService.getBookingById(req.params.id);
-    if (!booking) {
-        res.status(404).json({ message: booking_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    const validatedBooking = booking_validator_1.default.validateBooking(booking);
-    if (!validatedBooking || validatedBooking._id !== req.params.id) {
-        res.status(400).json({ message: booking_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    res.json(validatedBooking);
+    res.json(booking);
 };
 exports.getBookingByIdController = getBookingByIdController;
 const createBookingController = async (req, res) => {
@@ -87,7 +78,7 @@ exports.updateBookingController = updateBookingController;
 const deleteBookingController = async (req, res) => {
     const success = await BookingService.deleteBooking(req.params.id);
     if (!success) {
-        res.status(404).json({ message: booking_validator_1.default.getErrors().join('; ') });
+        res.status(404).json({ message: 'Delete failed' });
         return;
     }
     res.status(204).send();

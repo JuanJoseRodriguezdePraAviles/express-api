@@ -18,12 +18,23 @@ const PORT = process.env.PORT || 3001;
 (0, database_1.connectDB)();
 const allowedOrigins = ['http://localhost:5173'];
 const corsOptions = {
-    origin: allowedOrigins,
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 };
 app.use((0, cors_1.default)(corsOptions));
 app.use(express_1.default.json());
+app.use((req, res, next) => {
+    if (Buffer.isBuffer(req.body)) {
+        try {
+            req.body = JSON.parse(req.body.toString('utf8'));
+        }
+        catch (err) {
+            console.error("Error parsing buffer body:", err);
+        }
+    }
+    next();
+});
 app.use("/api/v1/rooms", rooms_routes_1.default);
 app.use("/api/v1/bookings", bookings_routes_1.default);
 app.use("/api/v1/reviews", reviews_routes_1.default);

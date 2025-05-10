@@ -22,6 +22,18 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(express.json());
+
+app.use((req, res, next) => {
+    if(Buffer.isBuffer(req.body)) {
+        try {
+            req.body = JSON.parse(req.body.toString('utf8'));
+        } catch (err) {
+            console.error("Error parsing buffer body:", err);
+        }
+    }
+    next();
+});
+
 app.use("/api/v1/rooms", roomsRouter);
 app.use("/api/v1/bookings", bookingsRouter);
 app.use("/api/v1/reviews", reviewsRouter);

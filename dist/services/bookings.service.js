@@ -1,11 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteBooking = exports.updateBooking = exports.createBooking = exports.getBookingById = exports.getAllBookings = void 0;
 const booking_schema_1 = require("../schemas/booking.schema");
-const booking_validator_1 = __importDefault(require("../validators/booking.validator"));
 const getAllBookings = async () => {
     const bookings = await booking_schema_1.BookingModel.find();
     return bookings;
@@ -18,10 +14,6 @@ const getBookingById = async (id) => {
 exports.getBookingById = getBookingById;
 const createBooking = async (newBooking) => {
     try {
-        const validatedBooking = booking_validator_1.default.validateBooking(newBooking);
-        if (!validatedBooking) {
-            throw new Error(`Booking validation failed: ${booking_validator_1.default.errors.join(', ')}`);
-        }
         const booking = new booking_schema_1.BookingModel({
             ...newBooking
         });

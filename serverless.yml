@@ -12,15 +12,27 @@ provider:
   name: aws
   region: eu-west-3
   runtime: nodejs18.x
+  httpApi:
+    cors:
+      allowedOrigins:
+        - "*"
+      allowedMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+      allowCredentials: false
 functions:
   app:
     handler: dist/index.handler
     events:
-      - http:
+      - httpApi:
           path: /
           method: ANY
-          cors: true
-      - http:
+      - httpApi:
           path: /{proxy+}
           method: ANY
-          cors: true

@@ -47,16 +47,7 @@ const getAllRoomsController = async (req, res) => {
 exports.getAllRoomsController = getAllRoomsController;
 const getRoomByIdController = async (req, res) => {
     const room = RoomService.getRoomById(req.params.id);
-    if (!room) {
-        res.status(404).json({ message: room_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    const validatedRoom = room_validator_1.default.validateRoom(room);
-    if (!validatedRoom || validatedRoom._id !== req.params.id) {
-        res.status(400).json({ message: room_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    res.json(validatedRoom);
+    res.json(room);
 };
 exports.getRoomByIdController = getRoomByIdController;
 const createRoomController = async (req, res) => {
@@ -89,7 +80,7 @@ exports.updateRoomController = updateRoomController;
 const deleteRoomController = async (req, res) => {
     const sucess = await RoomService.deleteRoom(req.params.id);
     if (!sucess) {
-        res.status(404).json({ message: room_validator_1.default.getErrors().join('; ') });
+        res.status(404).json({ message: 'Delete failed' });
         return;
     }
     res.status(204).send();

@@ -51,12 +51,7 @@ const getReviewByIdController = (req, res) => {
         res.status(404).json({ message: review_validator_1.default.getErrors().join('; ') });
         return;
     }
-    const validatedReview = review_validator_1.default.validateReview(review);
-    if (!validatedReview || validatedReview._id !== req.params.id) {
-        res.status(400).json({ message: review_validator_1.default.getErrors().join('; ') });
-        return;
-    }
-    res.json(validatedReview);
+    res.json(review);
 };
 exports.getReviewByIdController = getReviewByIdController;
 const createReviewController = async (req, res) => {
@@ -91,7 +86,7 @@ exports.updateReviewController = updateReviewController;
 const deleteReviewController = async (req, res) => {
     const success = ReviewService.deleteReview(req.params.id);
     if (!success) {
-        res.status(404).json({ message: review_validator_1.default.getErrors().join('; ') });
+        res.status(404).json({ message: 'Delete failed' });
         return;
     }
     res.status(204).send();
