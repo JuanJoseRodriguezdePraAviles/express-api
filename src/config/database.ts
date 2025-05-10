@@ -12,12 +12,13 @@ if (!connString || !dbName) {
 }
 
 export const connectDB = async (): Promise<void> => {
-    await mongoose.connect(connString, {
-        dbName: dbName
-    }).then(() => {
-        console.log('Connected to MongoDB');
-    })
-    .catch((err) => {
-        console.error('Conection error to MongoDB', err);
-    });
+    try {
+        await mongoose.connect(connString, {
+            dbName: dbName
+        });
+        console.log("Conected to mongodb");
+    } catch(err) {
+        console.error('Connection error to mongodb');
+        throw err;
+    }
 }

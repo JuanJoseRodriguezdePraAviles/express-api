@@ -174,7 +174,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/miranda-backend/dev/1746781439770-2025-05-09T09:03:59.770Z/miranda-backend.zip"
+                "S3Key": "serverless/miranda-backend/dev/1746858588247-2025-05-10T06:29:48.247Z/miranda-backend.zip"
               },
               "Handler": "dist/index.handler",
               "Runtime": "nodejs18.x",
@@ -417,7 +417,7 @@
               "AppLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1746781421907": {
+          "ApiGatewayDeployment1746858584140": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -679,7 +679,7 @@
         ],
         "artifactsS3KeyDirname": "serverless/miranda-backend/dev/code-artifacts",
         "artifact": "C:\\Proyectos\\express-api\\.serverless\\miranda-backend.zip",
-        "artifactDirectoryName": "serverless/miranda-backend/dev/1746781439770-2025-05-09T09:03:59.770Z"
+        "artifactDirectoryName": "serverless/miranda-backend/dev/1746858588247-2025-05-10T06:29:48.247Z"
       },
       "provider": {
         "$ref": "$[\"service\"][\"provider\"]"
@@ -693,7 +693,7 @@
     "artifact": "C:\\Proyectos\\express-api\\.serverless\\miranda-backend.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/miranda-backend/dev/1746781439770-2025-05-09T09:03:59.770Z",
+    "artifactDirectoryName": "serverless/miranda-backend/dev/1746858588247-2025-05-10T06:29:48.247Z",
     "artifact": "miranda-backend.zip"
   }
 }

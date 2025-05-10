@@ -10,12 +10,12 @@ export const loginController = async (req: Request, res: Response): Promise<void
     try {
         const employee = await EmployeeModel.findOne({ email: username});
         if(!employee) {
-            res.status(401).json({ message: "Invalid username or password"});
+            res.status(401).json({ message: "Invalid username"});
             return;
         }
         const isPasswordValid = await bcrypt.compare(password, employee.password);
         if(!isPasswordValid) {
-            res.status(401).json({ message: "Invalid username or password"});
+            res.status(401).json({ message: "Invalid password"});
             return;
         }
         const token = generateAccessToken(employee._id.toString());
