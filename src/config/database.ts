@@ -1,24 +1,19 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { seed } from './seed';
+import mysql from 'mysql2/promise';
+import { Sequelize } from 'sequelize';
 
 dotenv.config();
 
-const connString = process.env.DB_CONN_STRING || '';
-const dbName = process.env.DB_NAME;
-
-if (!connString || !dbName) {
-    throw new Error('Empty MongoDB variables');
-}
-
-export const connectDB = async (): Promise<void> => {
-    try {
-        await mongoose.connect(connString, {
-            dbName: dbName
-        });
-        console.log("Conected to mongodb");
-    } catch(err) {
-        console.error('Connection error to mongodb');
-        throw err;
+export const sequelize = new Sequelize(
+    process.env.DB_NAME as string,
+    process.env.DB_USER as string,
+    process.env.DB_PASSWORD as string,
+    {
+        host: process.env.DB_HOST,
+        port: Number(process.env.DB_PORT) || 3306,
+        dialect: 'mysql',
+        logging: false
     }
-}
+);

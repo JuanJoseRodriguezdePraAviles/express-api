@@ -5,14 +5,10 @@ import reviewsRouter from './routes/reviews.routes';
 import employeesRouter from './routes/employees.routes';
 import loginRouter from './routes/login.routes';
 import serverless from 'serverless-http';
-import { connectDB } from './config/database';
-import cors from 'cors'; 
+import cors from 'cors';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-
-connectDB();
-
 const allowedOrigins = ['http://localhost:5173'];
 
 const corsOptions = {
