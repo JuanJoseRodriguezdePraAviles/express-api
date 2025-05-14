@@ -3,7 +3,7 @@ import { RoomStatus } from "./RoomStatus";
 import { RoomType } from "./RoomType";
 
 export interface Room {
-    _id?: string,
+    ID?: string,
     room_name: string,
     room_type?: RoomType,
     room_floor?: string,

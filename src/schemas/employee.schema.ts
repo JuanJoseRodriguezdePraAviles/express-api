@@ -1,69 +1,15 @@
-import {
-  DataTypes,
-  Model,
-  InferAttributes,
-  InferCreationAttributes,
-  CreationOptional
-} from 'sequelize';
-import { sequelize } from '../config/database';
+import { Schema, model } from 'mongoose';
+import { Employee } from '../interfaces/Employee';
 
-export class EmployeeModel extends Model<
-  InferAttributes<EmployeeModel>,
-  InferCreationAttributes<EmployeeModel>
-> {
-  declare DNI: string;
-  declare name: string;
-  declare email: string;
-  declare password: string;
-  declare registration_date: Date;
-  declare job_functions: CreationOptional<string>;
-  declare phone: CreationOptional<string>;
-  declare schelude: CreationOptional<string>;
-  declare status: CreationOptional<boolean>;
-}
+const EmployeeSchema = new Schema<Employee>({
+    name: {type: String, required: true},
+    email: {type: String, required: true},
+    password: {type: String, required: true},
+    job_functions: {type: String},
+    registration_date: {type: Date, required: true},
+    phone: {type: String},
+    schelude: {type: String},
+    status: {type: Boolean, required: true}
+});
 
-EmployeeModel.init(
-  {
-    DNI: {
-      type: DataTypes.STRING,
-      primaryKey: true
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    registration_date: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    job_functions: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    phone: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    schelude: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    status: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true
-    }
-  },
-  {
-    sequelize,
-    tableName: 'employee',
-    timestamps: false
-  }
-);
+export const EmployeeModel = model<Employee>('Employee', EmployeeSchema);

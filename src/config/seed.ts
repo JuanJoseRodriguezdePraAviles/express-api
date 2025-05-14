@@ -60,7 +60,6 @@ CREATE TABLE IF NOT EXISTS employee (
 );
 
 */
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { rooms } from './fake.rooms';
 import { reviews } from './fake.reviews';
@@ -71,14 +70,13 @@ import { ReviewModel } from '../schemas/review.schema';
 import { EmployeeModel } from '../schemas/employee.schema';
 import { createRandomBooking } from './fake.bookings';
 import bcrypt from 'bcryptjs';
+import { sequelize } from './database';
 
 dotenv.config();
 
 export async function seed() {
     try {
-        await mongoose.connect(process.env.DB_CONN_STRING as string, {
-            dbName: process.env.DB_NAME
-        })
+        await sequelize.sync({ force: true });
         await RoomModel.deleteMany();
         const resultRoom = await RoomModel.insertMany(rooms);
         console.log(`${resultRoom.length} inserted rooms`);
@@ -110,7 +108,6 @@ export async function seed() {
         await EmployeeModel.insertMany(resultEmployee);
         console.log(`${resultReview.length} inserted employees`);
 
-        mongoose.disconnect();
     } catch (err) {
         console.log("population BD error", err);
     }
