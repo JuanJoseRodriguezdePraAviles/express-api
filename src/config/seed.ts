@@ -1,7 +1,9 @@
 /*
-DROP TABLE review, room, booking;
+DROP TABLE review;
+DROP TABLE booking;
+DROP TABLE room, employee;
 CREATE TABLE IF NOT EXISTS room (
-	ID VARCHAR(20) NOT NULL PRIMARY KEY,
+	ID VARCHAR(40) NOT NULL PRIMARY KEY,
     room_name VARCHAR(40) NOT NULL,
     room_type ENUM('Single Bed', 'Double Bed', 'Double Superior', 'Suite'),
     room_floor VARCHAR(5),
@@ -14,29 +16,15 @@ CREATE TABLE IF NOT EXISTS room (
     cancellation_policy VARCHAR(1000),
     room_amenities ENUM('3 Bed Space', '24 Hours Guard', 'Free Wifi', '2 Bathroom', 'Air Conditioner', 'Television')
 );
-CREATE TABLE IF NOT EXISTS review (
-	ID VARCHAR(9) NOT NULL PRIMARY KEY,
-    email VARCHAR(40) NOT NULL,
-    date DATE NOT NULL,
-    DNI VARCHAR(9) NOT NULL,
-    customer_name VARCHAR(50) NOT NULL,
-    phone VARCHAR(13) NOT NULL,
-    subject VARCHAR(40) NOT NULL,
-    comment VARCHAR(1000) NOT NULL,
-    archived BOOLEAN NOT NULL,
-    clientID VARCHAR(20) NOT NULL
-);
 
 CREATE TABLE IF NOT EXISTS booking (
-	ID VARCHAR(20) NOT NULL PRIMARY KEY,
-    roomID VARCHAR(9) NOT NULL,
+	ID VARCHAR(40) NOT NULL PRIMARY KEY,
+    roomID VARCHAR(40) NOT NULL,
     FOREIGN KEY (roomID) REFERENCES room(ID),
-    reviewID VARCHAR(9),
-    FOREIGN KEY (reviewID) REFERENCES review(ID),
-    clientID VARCHAR(20) NOT NULL,
+    clientID VARCHAR(40) NOT NULL,
     client_name VARCHAR(100),
     client_email VARCHAR(100),
-    client_phone VARCHAR(13),
+    client_phone VARCHAR(40),
     order_date DATE,
     check_in_date DATE,
     check_out_date DATE,
@@ -44,31 +32,36 @@ CREATE TABLE IF NOT EXISTS booking (
     special_request VARCHAR(1000)
 );
 
-ALTER TABLE review
-ADD FOREIGN KEY (clientID) REFERENCES booking(ID);
+CREATE TABLE IF NOT EXISTS review (
+	ID VARCHAR(40) NOT NULL PRIMARY KEY,
+    email VARCHAR(40) NOT NULL,
+    date DATE NOT NULL,
+    customer_name VARCHAR(50) NOT NULL,
+    phone VARCHAR(40) NOT NULL,
+    subject VARCHAR(40) NOT NULL,
+    comment VARCHAR(1000) NOT NULL,
+    archived BOOLEAN NOT NULL,
+    clientID VARCHAR(40) NOT NULL,
+    FOREIGN KEY (clientID) REFERENCES booking(ID)
+);
 
 CREATE TABLE IF NOT EXISTS employee (
-	DNI VARCHAR(20) NOT NULL PRIMARY KEY,
+	DNI VARCHAR(40) NOT NULL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
-    password VARCHAR(40) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     job_functions VARCHAR(1000),
     registration_date DATE,
-    phone VARCHAR(13),
+    phone VARCHAR(40),
     schelude VARCHAR(100),
     status BOOLEAN
 );
-
 */
 import dotenv from 'dotenv';
 import { rooms } from './fake.rooms';
+import { bookings } from './fake.bookings';
 import { reviews } from './fake.reviews';
-import { generateEmployees } from './fake.employees';
-import { BookingModel } from '../schemas/booking.schema';
-import { RoomModel } from '../schemas/room.schema';
-import { ReviewModel } from '../schemas/review.schema';
-import { EmployeeModel } from '../schemas/employee.schema';
-import { createRandomBooking } from './fake.bookings';
+import { employees } from './fake.employees';
 import bcrypt from 'bcryptjs';
 import { sequelize } from './database';
 
@@ -77,37 +70,72 @@ dotenv.config();
 export async function seed() {
     try {
         await sequelize.sync({ force: true });
-        await RoomModel.deleteMany();
-        const resultRoom = await RoomModel.insertMany(rooms);
-        console.log(`${resultRoom.length} inserted rooms`);
 
-        await BookingModel.deleteMany();
-        const bookings = resultRoom.map(room => createRandomBooking(room.id));
-        const resultBooking = await BookingModel.insertMany(bookings);
-        console.log(`${resultBooking.length} inserted bookings`);
+        for(const room of rooms) {
+            console.log("Datos que intento insertar:", room);
+            await sequelize.query(
+                `INSERT INTO room (ID, room_name, room_type, room_floor, status, description, photos,
+                    offer, price, discount, cancellation_policy, room_amenities) VALUES (:ID, :room_name,
+                    :room_type, :room_floor, :status, :description, :photos, :offer, :price, :discount,
+                    :cancellation_policy, :room_amenities)`,
+                { replacements: room as { [key: string]: any }}
+            );
+        }
+        console.log(`${rooms.length} inserted rooms`);
 
-        await ReviewModel.deleteMany();
-        const resultReview = await ReviewModel.insertMany(reviews);
-        console.log(`${resultReview.length} inserted reviews`);
+        for(const booking of bookings) {
+            await sequelize.query(
+                `INSERT INTO booking (ID, roomID, clientID, client_name, client_email, client_phone,
+                    order_date, check_in_date, check_out_date, status, special_request) VALUES (:ID, :roomID,
+                    :clientID, :client_name, :client_email, :client_phone, :order_date, :check_in_date,
+                    :check_out_date, :status, :special_request)`,
+                { replacements: booking as { [key: string]: any }}
+            );
+        }
+        console.log(`${bookings.length} inserted bookings`);
 
-        await EmployeeModel.deleteMany();
-        const resultEmployee = await generateEmployees(10);
+        for(const review of reviews) {
+            await sequelize.query(
+                `INSERT INTO review (ID, email, date, clientID, customer_name, phone, subject,
+                    comment, archived) VALUES (:ID, :email, :date, :clientID, :customer_name,
+                    :phone, :subject, :comment, :archived)`,
+                { replacements: review as { [key: string]: any }}
+            );
+        }
+        console.log(`${reviews.length} inserted reviews`);
 
+        const loadedEmployees = await employees();
+        for(const employee of loadedEmployees) {
+            console.log('employee trying to insert' + employee);
+            await sequelize.query(
+                `INSERT INTO employee (DNI, name, email, password, job_functions, registration_date, phone,
+                    schelude, status) VALUES (:DNI, :name, :email, :password, :job_functions, :registration_date,
+                    :phone, :schelude, :status)`,
+                { replacements: employee as { [key: string]: any }}
+            );
+        }
+        console.log(`${employees.length} inserted employees`);
+
+        const hashedPassword = await bcrypt.hash("test1234", 10);
+        console.log("Hashed password length:", hashedPassword.length);
         const testEmployee = {
+            DNI: "test",
             name: "Test user",
             email: "test@example.com",
-            password: await bcrypt.hash("test1234", 10),
+            password: hashedPassword,
             job_functions: "Testing",
-            registration_date: new Date(),
+            registration_date: new Date().toISOString().slice(0, 10),
             phone: "555-555-555",
             schelude: "9-15",
             status: true
         }
-        resultEmployee.push(testEmployee);
-
-        await EmployeeModel.insertMany(resultEmployee);
-        console.log(`${resultReview.length} inserted employees`);
-
+        console.log("Inserting test employee:", Object.keys(testEmployee));
+        await sequelize.query(
+            `INSERT INTO employee (DNI, name, email, password, job_functions, registration_date, phone,
+                    schelude, status) VALUES (:DNI, :name, :email, :password, :job_functions, :registration_date,
+                    :phone, :schelude, :status)`,
+                { replacements: testEmployee as { [key: string]: any }}
+        );
     } catch (err) {
         console.log("population BD error", err);
     }

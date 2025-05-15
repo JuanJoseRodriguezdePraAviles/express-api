@@ -1,11 +1,13 @@
 import { faker } from '@faker-js/faker';
 import { Review } from '../interfaces/Review';
+import { bookings } from './fake.bookings';
 
-export function createRandomReview(): Review {
+export function createRandomReview(bookingId: string): Review {
     return {
+        ID: faker.string.uuid(),
         email: faker.internet.email(),
         date: faker.date.recent(),
-        customer_id: faker.string.uuid(),
+        clientID: bookingId,
         customer_name: faker.person.fullName(),
         phone: faker.phone.number(),
         subject: faker.lorem.words(3),
@@ -14,6 +16,4 @@ export function createRandomReview(): Review {
     }
 }
 
-export const reviews = faker.helpers.multiple(createRandomReview, {
-    count: 10
-});
+export const reviews = bookings.map(booking => createRandomReview(booking.ID!));

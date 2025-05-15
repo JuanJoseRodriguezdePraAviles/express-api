@@ -9,10 +9,10 @@ export interface Room {
     room_floor?: string,
     status?: RoomStatus,
     description?: string,
-    photos?: string[],
+    photos?: string,
     offer?: boolean,
     price?: number,
     discount?: number,
     cancellation_policy?: string,
-    room_amenities?: Amenities[]
+    room_amenities?: string
 }

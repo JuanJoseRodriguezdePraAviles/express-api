@@ -1,11 +1,13 @@
 import { faker } from "@faker-js/faker";
 import { Employee } from "../interfaces/Employee";
 import bcrypt from 'bcryptjs';
+import { reviews } from "./fake.reviews";
 
 export async function createRandomEmployee(): Promise<Employee> {
     const password = faker.internet.password();
     const hashedPassword = await bcrypt.hash(password, 10);
     const employee = {
+        DNI: faker.string.uuid(),
         name: faker.person.fullName(),
         email: faker.internet.email(),
         password: hashedPassword,
@@ -19,7 +21,8 @@ export async function createRandomEmployee(): Promise<Employee> {
     return employee;
 }
 
-export async function generateEmployees(count: number): Promise<Employee[]> {
-    const employeePromises = Array.from({ length: count }, () => createRandomEmployee());
-    return await Promise.all(employeePromises);
-};
+export async function employees() {
+    return Promise.all(
+        Array.from({ length: 10 }, () => createRandomEmployee())
+    );
+}
