@@ -7,7 +7,7 @@ export const getAllBookings = async (): Promise<Booking[]> => {
 }
 
 export const getBookingById = async (id: string): Promise<Booking | null> => {
-    const [results] = await sequelize.query('SELECT * FROM booking WHERE ID = :id', {
+    const [results] = await sequelize.query('SELECT * FROM booking WHERE id = :id', {
         replacements: { id }
     });
     const bookings = results as Booking[];
@@ -15,30 +15,30 @@ export const getBookingById = async (id: string): Promise<Booking | null> => {
 }
 
 export const createBooking = async (newBooking: Partial<Booking>): Promise<Booking> => {
-    if (!newBooking.roomID || !newBooking.clientID || !newBooking.check_in_date || !newBooking.check_out_date) {
+    if (!newBooking.roomId || !newBooking.clientId || !newBooking.checkInDate || !newBooking.checkOutDate) {
         throw new Error("Missing required booking fields");
     }
     const [results] = await sequelize.query(
         `INSERT INTO booking (
-            ID, roomID, clientID, client_name, client_email, client_phone,
-            order_date, check_in_date, check_out_date, status, special_request
+            id, roomId, clientId, clientName, clientEmail, clientPhone,
+            orderDate, checkInDate, checkOutDate, status, specialRequest
         ) VALUES (
-            :ID, :roomID, :clientID, :client_name, :client_email, :client_phone,
-            :order_date, :check_in_date, :check_out_date, :status, :special_request
+            :id, :roomId, :clientId, :clientName, :clientEmail, :clientPhone,
+            :orderDate, :checkInDate, :checkOutDate, :status, :specialRequest
         )`,
          {
             replacements: {
-                ID: newBooking.ID,
-                roomID: newBooking.roomID,
-                clientID: newBooking.clientID,
-                client_name: newBooking.client_name || null,
-                client_email: newBooking.client_email || null,
-                client_phone: newBooking.client_phone || null,
-                order_date: newBooking.order_date || new Date(),
-                check_in_date: newBooking.check_in_date,
-                check_out_date: newBooking.check_out_date,
+                id: newBooking.id,
+                roomId: newBooking.roomId,
+                clientId: newBooking.clientId,
+                clientName: newBooking.clientName || null,
+                clientEmail: newBooking.clientEmail || null,
+                clientPhone: newBooking.clientPhone || null,
+                orderDate: newBooking.orderDate || new Date(),
+                checkInDate: newBooking.checkInDate,
+                checkOutDate: newBooking.checkOutDate,
                 status: newBooking.status || null,
-                special_request: newBooking.special_request || null
+                specialRequest: newBooking.specialRequest || null
             }
          }
     );
@@ -56,14 +56,14 @@ export const updateBooking = async (id: string, updateBooking: Partial<Booking>)
     });
 
     const [results] = await sequelize.query(
-        `UPDATE booking SET ${setClause} WHERE ID = :id`,
+        `UPDATE booking SET ${setClause} WHERE id = :id`,
         { replacements }
     );
     return (results as Booking[])[0] || null;
 }
 
 export const deleteBooking = async (id: string): Promise<boolean> => {
-    const [results] = await sequelize.query('DELETE FROM booking WHERE ID = :id', {
+    const [results] = await sequelize.query('DELETE FROM booking WHERE id = :id', {
         replacements: { id }
     });
     return true;

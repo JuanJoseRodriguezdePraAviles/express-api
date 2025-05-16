@@ -11,9 +11,9 @@ export function createRandomRoom(): Room {
         max: allAmenities.length
     });
     return {
-        room_name: faker.lorem.words(2),
-        room_type: faker.helpers.arrayElement(Object.values(RoomType)),
-        room_floor: faker.number.int({min: 1, max: 10}).toString(),
+        roomName: faker.lorem.words(2),
+        roomType: faker.helpers.arrayElement(Object.values(RoomType)),
+        roomFloor: faker.number.int({min: 1, max: 10}).toString(),
         status: faker.helpers.arrayElement(Object.values(RoomStatus)),
         description: faker.lorem.sentence(),
         photos: JSON.stringify([
@@ -24,8 +24,8 @@ export function createRandomRoom(): Room {
         offer: faker.datatype.boolean(),
         price: faker.number.float({ min: 50, max: 500}),
         discount: faker.number.float({min: 0, max: 50}),
-        cancellation_policy: faker.lorem.sentence(),
-        room_amenities: randomAmenities[0]
+        cancellationPolicy: faker.lorem.sentence(),
+        roomAmenities: randomAmenities[0]
     }
 }
 

@@ -30,11 +30,11 @@ export const loginController = async (req: Request, res: Response): Promise<void
             res.status(401).json({ message: "Invalid password"});
             return;
         }
-        const token = generateAccessToken(employee?.DNI?.toString()!);
+        const token = generateAccessToken(employee?.dni?.toString()!);
 
         res.status(200).json({
             token: token,
-            loggedUserID: employee.DNI
+            loggedUserID: employee.dni
         });
     } catch (error) {
 

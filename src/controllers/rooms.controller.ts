@@ -39,7 +39,6 @@ export const updateRoomController = async (req: Request, res: Response): Promise
     }
     
     const updatedRoom = await RoomService.updateRoom(req.params.id, validatedRoom);
-    console.log(updatedRoom);
     res.json(updatedRoom);
 }
 

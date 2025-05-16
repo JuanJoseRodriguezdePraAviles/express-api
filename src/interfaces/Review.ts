@@ -1,9 +1,9 @@
 export interface Review {
-    ID?: string,
+    id?: string,
     email: string,
     date: Date,
-    clientID: string,
-    customer_name: string,
+    clientId: string,
+    customerName: string,
     phone: string,
     subject: string,
     comment: string,

@@ -9,13 +9,12 @@ export async function createRandomEmployee(): Promise<Employee> {
         name: faker.person.fullName(),
         email: faker.internet.email(),
         password: hashedPassword,
-        job_functions: faker.lorem.words(),
-        registration_date: faker.date.recent(),
+        jobFunctions: faker.lorem.words(),
+        registrationDate: faker.date.recent(),
         phone: faker.phone.number(),
         schelude: faker.lorem.words(),
         status: faker.datatype.boolean()
     }
-    console.log(`Generated user: ${employee.email} / ${password}`);
     return employee;
 }
 

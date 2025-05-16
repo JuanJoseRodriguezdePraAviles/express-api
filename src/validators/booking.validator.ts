@@ -9,37 +9,37 @@ export default class BookingValidator {
         if (!booking || typeof booking !== 'object') {
             this.errors.push("Invalid object booking");
         }
-        if ('ID' in booking && typeof booking.ID !== 'string') {
+        if ('ID' in booking && typeof booking.id !== 'string') {
             this.errors.push("Invalid booking ID");
         }
-        if (!('roomID' in booking) || typeof booking.roomID !== 'string') {
+        if (!('roomID' in booking) || typeof booking.roomId !== 'string') {
             this.errors.push("Missing or Invalid room ID");
         }
-        if (!('clientID' in booking) || typeof booking.clientID !== 'string') {
+        if (!('clientID' in booking) || typeof booking.clientId !== 'string') {
             this.errors.push("Missing or Invalid booking client id");
         }
-        if ('client_name' in booking && typeof booking.client_name !== 'string') {
+        if ('client_name' in booking && typeof booking.clientName !== 'string') {
             this.errors.push("Invalid booking client name");
         }
-        if ('client_email' in booking && typeof booking.client_email !== 'string') {
+        if ('client_email' in booking && typeof booking.clientEmail !== 'string') {
             this.errors.push("Invalid booking client email");
         }
-        if ('client_phone' in booking && typeof booking.client_phone !== 'string') {
+        if ('client_phone' in booking && typeof booking.clientPhone !== 'string') {
             this.errors.push("Invalid booking client phone");
         }
-        if ('order_date' in booking && !(new Date(booking.order_date) instanceof Date)) {
+        if ('order_date' in booking && !(new Date(booking.orderDate) instanceof Date)) {
             this.errors.push("Invalid booking order date");
         }
-        if ('check_in_date' in booking && !(new Date(booking.check_in_date) instanceof Date)) {
+        if ('check_in_date' in booking && !(new Date(booking.checkInDate) instanceof Date)) {
             this.errors.push("Invalid booking check in date");
         }
-        if ('check_out_date' in booking && !(new Date(booking.check_out_date) instanceof Date)) {
+        if ('check_out_date' in booking && !(new Date(booking.checkOutDate) instanceof Date)) {
             this.errors.push("Invalid booking check out date");
         }
         if ('status' in booking && typeof booking.status !== 'string') {
             this.errors.push("Invalid booking status");
         }
-        if ('special_request' in booking && typeof booking.special_request !== 'string') {
+        if ('special_request' in booking && typeof booking.specialRequest !== 'string') {
             this.errors.push("Invalid booking special request");
         }
 

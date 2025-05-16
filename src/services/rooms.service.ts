@@ -8,7 +8,7 @@ export const getAllRooms = async (): Promise<Room[]> => {
 }
 
 export const getRoomById = async (id: string): Promise<Room | null> => {
-    const [results] = await sequelize.query('SELECT * FROM room WHERE ID = :id', {
+    const [results] = await sequelize.query('SELECT * FROM room WHERE id = :id', {
         replacements: { id }
     });
     const rooms = results as Room[];
@@ -16,31 +16,31 @@ export const getRoomById = async (id: string): Promise<Room | null> => {
 }
 
 export const createRoom = async (newRoom: Partial<Room>): Promise<Room> => {
-    if (!newRoom.room_name) {
+    if (!newRoom.roomName) {
         throw new Error("Missing required room fields");
     }
     const [results] = await sequelize.query(
         `INSERT INTO room (
-            ID, room_name, room_type, room_floor, status, description, photos, offer, price, discount,
-            cancellation_policy, room_amenities
+            id, roomName, roomType, roomFloor, status, description, photos, offer, price, discount,
+            cancellationPolicy, roomAmenities
         ) VALUES (
-            :ID, :room_name, :room_type, :room_floor, :status, :description, :photos, :offer, :price, :discount,
-            :cancellation_policy, :room_amenities 
+            :id, :roomName, :roomType, :roomFloor, :status, :description, :photos, :offer, :price, :discount,
+            :cancellationPolicy, :roomAmenities 
         )`,
          {
             replacements: {
-                ID: newRoom.ID,
-                room_name: newRoom.room_name,
-                room_type: newRoom.room_type,
-                room_floor: newRoom.room_floor,
+                id: newRoom.id,
+                roomName: newRoom.roomName,
+                roomType: newRoom.roomType,
+                roomFloor: newRoom.roomFloor,
                 status: newRoom.status,
                 description: newRoom.description,
                 photos: newRoom.photos,
                 offer: newRoom.offer,
                 price: newRoom.price,
                 discount: newRoom.discount,
-                cancellation_policy: newRoom.cancellation_policy,
-                room_amenities: newRoom.room_amenities
+                cancellationPolicy: newRoom.cancellationPolicy,
+                roomAmenities: newRoom.roomAmenities
             }
          }
     );
@@ -58,14 +58,14 @@ export const updateRoom = async (id: string, updateRoom: Partial<Room>): Promise
     });
 
     const [results] = await sequelize.query(
-        `UPDATE room SET ${setClause} WHERE ID = :id`,
+        `UPDATE room SET ${setClause} WHERE id = :id`,
         { replacements }
     );
     return (results as Room[])[0] || null;
 }
 
 export const deleteRoom = async (id: string): Promise<boolean> => {
-    const [results] = await sequelize.query('DELETE FROM room WHERE ID = :id', {
+    const [results] = await sequelize.query('DELETE FROM room WHERE id = :id', {
         replacements: { id }
     });
     return true;

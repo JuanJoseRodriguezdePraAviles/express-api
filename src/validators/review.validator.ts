@@ -18,10 +18,10 @@ export default class ReviewValidator {
         if (!('date' in review) || !(new Date(review.date) instanceof Date)) {
             this.errors.push("Missing or Invalid review date");
         }
-        if (!('customer_name' in review) || typeof review.customer_name !== 'string') {
+        if (!('customer_name' in review) || typeof review.customerName !== 'string') {
             this.errors.push("Missing or Invalid review customer name");
         }
-        if (!('customerID' in review) || typeof review.clientID !== 'string') {
+        if (!('customerID' in review) || typeof review.clientId !== 'string') {
             this.errors.push("Missing or Invalid review customer id");
         }
         if (!('phone' in review) || typeof review.phone !== 'string') {

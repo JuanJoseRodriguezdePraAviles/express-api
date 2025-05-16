@@ -21,10 +21,10 @@ export default class EmployeeValidator {
         if (!('password' in employee) || typeof employee.password !== 'string') {
             this.errors.push("Missing or Invalid employee password");
         }
-        if ('job_functions' in employee && typeof employee.job_functions !== 'string') {
+        if ('job_functions' in employee && typeof employee.jobFunctions !== 'string') {
             this.errors.push("Invalid employee job functions");
         }
-        if (!('registration_date' in employee) || !(new Date(employee.registration_date) instanceof Date)) {
+        if (!('registration_date' in employee) || !(new Date(employee.registrationDate) instanceof Date)) {
             this.errors.push("MissingInvalid registration date");
         }
         if ('phone' in employee && typeof employee.phone !== 'string') {

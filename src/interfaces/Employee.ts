@@ -1,10 +1,10 @@
 export interface Employee {
-    DNI?: string,
+    dni?: string,
     name: string,
     email: string,
     password: string,
-    job_functions?: string,
-    registration_date: Date,
+    jobFunctions?: string,
+    registrationDate: Date,
     phone?: string,
     schelude?: string,
     status?: boolean

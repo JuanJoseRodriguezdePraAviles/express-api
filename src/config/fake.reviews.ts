@@ -15,8 +15,8 @@ export function createRandomReview(bookingId: string): Review {
     return {
         email: faker.internet.email(),
         date: faker.date.recent(),
-        clientID: bookingId,
-        customer_name: faker.person.fullName(),
+        clientId: bookingId,
+        customerName: faker.person.fullName(),
         phone: faker.phone.number(),
         subject: faker.lorem.words(3),
         comment: faker.lorem.sentence(),

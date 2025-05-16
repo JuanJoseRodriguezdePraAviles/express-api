@@ -9,7 +9,7 @@ export const getAllEmployees = async (): Promise<Employee[]> => {
 }
 
 export const getEmployeeById = async (id: string): Promise<Employee | null> => {
-    const [results] = await sequelize.query('SELECT * FROM employee WHERE DNI = :id', {
+    const [results] = await sequelize.query('SELECT * FROM employee WHERE dni = :id', {
         replacements: { id }
     });
     const employees = results as Employee[];
@@ -17,25 +17,25 @@ export const getEmployeeById = async (id: string): Promise<Employee | null> => {
 }
 
 export const createEmployee = async (newEmployee: Employee): Promise<Employee> => {
-    if (!newEmployee.name || !newEmployee.email || !newEmployee.password || !newEmployee.registration_date) {
+    if (!newEmployee.name || !newEmployee.email || !newEmployee.password || !newEmployee.registrationDate) {
         throw new Error("Missing required employee fields");
     }
     const [results] = await sequelize.query(
         `INSERT INTO employee (
-            DNI, name, email, password, job_functions, registration_date,
+            dni, name, email, password, jobFunctions, registrationDate,
             phone, schelude, status
         ) VALUES (
-            :DNI, :name, :email, :password, :job_functions, :registration_date,
+            :dni, :name, :email, :password, :jobFunctions, :registrationDate,
             :phone, :schelude, :status 
         )`,
         {
             replacements: {
-                DNI: newEmployee.DNI,
+                DNI: newEmployee.dni,
                 name: newEmployee.name,
                 email: newEmployee.email,
                 password: newEmployee.password,
-                job_functions: newEmployee.job_functions,
-                registration_date: newEmployee.registration_date,
+                jobFunctions: newEmployee.jobFunctions,
+                registrationDate: newEmployee.registrationDate,
                 phone: newEmployee.phone,
                 schelude: newEmployee.schelude,
                 status: newEmployee.status
@@ -55,14 +55,14 @@ export const updateEmployee = async (id: string, updateEmployee: Partial<Employe
         replacements[`value${i}`] = (updateEmployee as any)[field];
     });
     const [results] = await sequelize.query(
-        `UPDATE employee SET ${setClause} WHERE DNI = :id`,
+        `UPDATE employee SET ${setClause} WHERE dni = :id`,
         { replacements }
     );
     return (results as Employee[])[0] || null; 
 }
 
 export const deleteEmployee = async (id: string): Promise<boolean> => {
-    const [results] = await sequelize.query('DELETE FROM employee WHERE DNI = :id', {
+    const [results] = await sequelize.query('DELETE FROM employee WHERE dni = :id', {
         replacements: { id }
     });
     return true;

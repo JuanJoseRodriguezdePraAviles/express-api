@@ -8,7 +8,7 @@ export const getAllReviews = async (): Promise<Review[]> => {
 }
 
 export const getReviewById = async (id: string): Promise<Review | null> => {
-    const [results] = await sequelize.query('SELECT * FROM review WHERE ID = :id', {
+    const [results] = await sequelize.query('SELECT * FROM review WHERE id = :id', {
         replacements: { id }
     });
     const reviews = results as Review[];
@@ -16,24 +16,24 @@ export const getReviewById = async (id: string): Promise<Review | null> => {
 }
 
 export const createReview = async (newReview: Review): Promise<Review> => {
-    if (!newReview.email || !newReview.date || !newReview.clientID || !newReview.customer_name || !newReview.phone
+    if (!newReview.email || !newReview.date || !newReview.clientId || !newReview.customerName || !newReview.phone
         || !newReview.subject || !newReview.comment || !newReview.archived
     ) {
         throw new Error("Missing required review fields");
     }
     const [results] = await sequelize.query(
         `INSERT INTO review (
-            ID, email, date, clientID, customer_name, phone, subject, comment, archived
+            id, email, date, clientId, customerName, phone, subject, comment, archived
         ) VALUES (
-            :ID, :email, :date, :clientID, :customer_name, :phone, :subject, :comment, :archived 
+            :id, :email, :date, :clientId, :customerName, :phone, :subject, :comment, :archived 
         )`,
         {
             replacements: {
-                ID: newReview.ID,
+                id: newReview.id,
                 email: newReview.email,
                 date: newReview.date,
-                clientID: newReview.clientID,
-                customer_name: newReview.customer_name,
+                clientId: newReview.clientId,
+                customerName: newReview.customerName,
                 phone: newReview.phone,
                 subject: newReview.subject,
                 comment: newReview.comment,
@@ -54,14 +54,14 @@ export const updateReview = async (id: string, updateReview: Partial<Review>): P
         replacements[`value${i}`] = (updateReview as any)[field];
     });
     const [results] = await sequelize.query(
-        `UPDATE review SET ${setClause} WHERE ID = :id`,
+        `UPDATE review SET ${setClause} WHERE id = :id`,
         { replacements }
     );
     return (results as Review[])[0] || null;
 }
 
 export const deleteReview = async (id: string): Promise<boolean> => {
-    const [results] = await sequelize.query('DELETE FROM review WHERE ID = :id', {
+    const [results] = await sequelize.query('DELETE FROM review WHERE id = :id', {
         replacements:  { id }
     });
     return true;
