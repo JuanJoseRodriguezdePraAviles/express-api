@@ -16,22 +16,23 @@ export const getReviewById = async (id: string): Promise<Review | null> => {
 }
 
 export const createReview = async (newReview: Review): Promise<Review> => {
-    if (!newReview.email || !newReview.date || !newReview.customer_id || !newReview.customer_name || !newReview.phone
+    if (!newReview.email || !newReview.date || !newReview.clientID || !newReview.customer_name || !newReview.phone
         || !newReview.subject || !newReview.comment || !newReview.archived
     ) {
         throw new Error("Missing required review fields");
     }
     const [results] = await sequelize.query(
         `INSERT INTO review (
-            email, date, customer_id, customer_name, phone, subject, comment, archived
+            ID, email, date, clientID, customer_name, phone, subject, comment, archived
         ) VALUES (
-            :email, :date, :customer_id, :customer_name, :phone, :subject, :comment, :archived 
-        ) RETURNING *`,
+            :ID, :email, :date, :clientID, :customer_name, :phone, :subject, :comment, :archived 
+        )`,
         {
             replacements: {
+                ID: newReview.ID,
                 email: newReview.email,
                 date: newReview.date,
-                customer_id: newReview.customer_id,
+                clientID: newReview.clientID,
                 customer_name: newReview.customer_name,
                 phone: newReview.phone,
                 subject: newReview.subject,
@@ -53,7 +54,7 @@ export const updateReview = async (id: string, updateReview: Partial<Review>): P
         replacements[`value${i}`] = (updateReview as any)[field];
     });
     const [results] = await sequelize.query(
-        `UPDATE review SET ${setClause} WHERE id = :id RETURNING *`,
+        `UPDATE review SET ${setClause} WHERE ID = :id`,
         { replacements }
     );
     return (results as Review[])[0] || null;

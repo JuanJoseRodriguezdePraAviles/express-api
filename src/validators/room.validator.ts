@@ -9,7 +9,7 @@ export default class RoomValidator {
         if (!room || typeof room !== 'object') {
             this.errors.push("Invalid object room");
         }
-        if ('_id' in room && typeof room._id !== 'string') {
+        if ('ID' in room && typeof room.ID !== 'string') {
             this.errors.push("Invalid room ID");
         }
         if (!('room_name' in room) || typeof room.room_name !== 'string') {
@@ -31,10 +31,10 @@ export default class RoomValidator {
         if ('description' in room && typeof room.description !== 'string') {
             this.errors.push("Invalid room description");
         }
-        if ('photos' in room && !Array.isArray(room.photos)) {
+        if ('photos' in room && typeof room.photos != 'string') {
             this.errors.push("Invalid room photos array");
         }
-        if ('offer' in room && typeof room.offer !== 'boolean') {
+        if ('offer' in room && typeof room.offer !== 'number') {
             this.errors.push("Invalid room offer");
         }
         if ('price' in room && typeof room.price !== 'number') {
@@ -46,7 +46,8 @@ export default class RoomValidator {
         if ('cancellation_policy' in room && typeof room.cancellation_policy !== 'string') {
             this.errors.push("Invalid room cancellation policy");
         }
-        if ('room_amenities' in room && !Array.isArray(room.room_amenities)) {
+        console.log(typeof room.room_amenities);
+        if ('room_amenities' in room && typeof room.room_amenities !='string') {
             this.errors.push("Invalid room amenities");
         }
         console.log(this.errors);

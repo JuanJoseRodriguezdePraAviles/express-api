@@ -21,14 +21,15 @@ export const createRoom = async (newRoom: Partial<Room>): Promise<Room> => {
     }
     const [results] = await sequelize.query(
         `INSERT INTO room (
-            room_name, room_type, room_floor, status, description, photos, offer, price, discount,
+            ID, room_name, room_type, room_floor, status, description, photos, offer, price, discount,
             cancellation_policy, room_amenities
         ) VALUES (
-            :room_name, :room_type, :room_floor, :status, :description, :photos, :offer, :price, :discount,
+            :ID, :room_name, :room_type, :room_floor, :status, :description, :photos, :offer, :price, :discount,
             :cancellation_policy, :room_amenities 
-        ) RETURNING *`,
+        )`,
          {
             replacements: {
+                ID: newRoom.ID,
                 room_name: newRoom.room_name,
                 room_type: newRoom.room_type,
                 room_floor: newRoom.room_floor,
@@ -57,7 +58,7 @@ export const updateRoom = async (id: string, updateRoom: Partial<Room>): Promise
     });
 
     const [results] = await sequelize.query(
-        `UPDATE room SET ${setClause} WHERE id = :id RETURNING *`,
+        `UPDATE room SET ${setClause} WHERE ID = :id`,
         { replacements }
     );
     return (results as Room[])[0] || null;

@@ -1,13 +1,17 @@
 import { faker } from '@faker-js/faker';
 import { Booking } from '../interfaces/Booking';
 import { BookingStatus } from '../interfaces/BookingStatus';
-import { rooms } from './fake.rooms';
+import { sequelize } from './database';
+
+export async function getRoomIDs(): Promise<string[]> {
+    const [results] = await sequelize.query('SELECT ID FROM room');
+    return (results as any[]).map(row => row.ID);
+}
 
 export function createRandomBooking(roomId: string): Booking {
     const checkIn = faker.date.soon();
     const checkout = faker.date.soon({days: 7, refDate: checkIn});
     return {
-        ID: faker.string.uuid(),
         roomID: roomId,
         clientID: faker.string.uuid(),
         client_name: faker.person.fullName(),
@@ -21,4 +25,7 @@ export function createRandomBooking(roomId: string): Booking {
     }
 }
 
-export const bookings = rooms.map(room => createRandomBooking(room.ID!));
+export async function createBookingsForRooms(): Promise<Booking[]> {
+    const roomIds = await getRoomIDs();
+    return roomIds.map(roomId => createRandomBooking(roomId));
+}

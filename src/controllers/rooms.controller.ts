@@ -18,7 +18,6 @@ export const getRoomByIdController = async (req: Request, res: Response): Promis
 export const createRoomController = async (req: Request, res: Response): Promise<void> => {
     try {
         const validatedRoom = RoomValidator.validateRoom(req.body);
-        console.log(validatedRoom);
         if (!validatedRoom) {
             res.status(400).json({ message: RoomValidator.getErrors().join('; ') });
             return;

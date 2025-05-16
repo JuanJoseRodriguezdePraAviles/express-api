@@ -9,7 +9,7 @@ export default class ReviewValidator {
         if (!review || typeof review !== 'object') {
             this.errors.push("Invalid object review");
         }
-        if ('id' in review && typeof review.id !== 'string') {
+        if ('ID' in review && typeof review.id !== 'string') {
             this.errors.push("Invalid review id");
         }
         if (!('email' in review) || typeof review.email !== 'string') {
@@ -21,7 +21,7 @@ export default class ReviewValidator {
         if (!('customer_name' in review) || typeof review.customer_name !== 'string') {
             this.errors.push("Missing or Invalid review customer name");
         }
-        if (!('customer_id' in review) || typeof review.customer_id !== 'string') {
+        if (!('customerID' in review) || typeof review.clientID !== 'string') {
             this.errors.push("Missing or Invalid review customer id");
         }
         if (!('phone' in review) || typeof review.phone !== 'string') {

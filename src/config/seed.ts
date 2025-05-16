@@ -3,7 +3,7 @@ DROP TABLE review;
 DROP TABLE booking;
 DROP TABLE room, employee;
 CREATE TABLE IF NOT EXISTS room (
-	ID VARCHAR(40) NOT NULL PRIMARY KEY,
+	ID VARCHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
     room_name VARCHAR(40) NOT NULL,
     room_type ENUM('Single Bed', 'Double Bed', 'Double Superior', 'Suite'),
     room_floor VARCHAR(5),
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS room (
 );
 
 CREATE TABLE IF NOT EXISTS booking (
-	ID VARCHAR(40) NOT NULL PRIMARY KEY,
+	ID VARCHAR(36) NOT NULL PRIMARY KEY DEFAULT(UUID()),
     roomID VARCHAR(40) NOT NULL,
     FOREIGN KEY (roomID) REFERENCES room(ID),
     clientID VARCHAR(40) NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS booking (
 );
 
 CREATE TABLE IF NOT EXISTS review (
-	ID VARCHAR(40) NOT NULL PRIMARY KEY,
+	ID VARCHAR(36) NOT NULL PRIMARY KEY DEFAULT(UUID()),
     email VARCHAR(40) NOT NULL,
     date DATE NOT NULL,
     customer_name VARCHAR(50) NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS review (
 );
 
 CREATE TABLE IF NOT EXISTS employee (
-	DNI VARCHAR(40) NOT NULL PRIMARY KEY,
+	DNI VARCHAR(36) NOT NULL PRIMARY KEY DEFAULT(UUID()),
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -59,11 +59,14 @@ CREATE TABLE IF NOT EXISTS employee (
 */
 import dotenv from 'dotenv';
 import { rooms } from './fake.rooms';
-import { bookings } from './fake.bookings';
-import { reviews } from './fake.reviews';
+import { createBookingsForRooms, getRoomIDs } from './fake.bookings';
+import { createReviewsForBookings, getBookingIDs } from './fake.reviews';
 import { employees } from './fake.employees';
 import bcrypt from 'bcryptjs';
 import { sequelize } from './database';
+import { Booking } from '../interfaces/Booking';
+import { QueryTypes } from 'sequelize';
+import { Review } from '../interfaces/Review';
 
 dotenv.config();
 
@@ -74,8 +77,8 @@ export async function seed() {
         for(const room of rooms) {
             console.log("Datos que intento insertar:", room);
             await sequelize.query(
-                `INSERT INTO room (ID, room_name, room_type, room_floor, status, description, photos,
-                    offer, price, discount, cancellation_policy, room_amenities) VALUES (:ID, :room_name,
+                `INSERT INTO room (room_name, room_type, room_floor, status, description, photos,
+                    offer, price, discount, cancellation_policy, room_amenities) VALUES (:room_name,
                     :room_type, :room_floor, :status, :description, :photos, :offer, :price, :discount,
                     :cancellation_policy, :room_amenities)`,
                 { replacements: room as { [key: string]: any }}
@@ -83,21 +86,24 @@ export async function seed() {
         }
         console.log(`${rooms.length} inserted rooms`);
 
+        const bookings = await createBookingsForRooms();
+        console.log(bookings);
         for(const booking of bookings) {
             await sequelize.query(
-                `INSERT INTO booking (ID, roomID, clientID, client_name, client_email, client_phone,
-                    order_date, check_in_date, check_out_date, status, special_request) VALUES (:ID, :roomID,
+                `INSERT INTO booking (roomID, clientID, client_name, client_email, client_phone,
+                    order_date, check_in_date, check_out_date, status, special_request) VALUES (:roomID,
                     :clientID, :client_name, :client_email, :client_phone, :order_date, :check_in_date,
                     :check_out_date, :status, :special_request)`,
                 { replacements: booking as { [key: string]: any }}
             );
         }
         console.log(`${bookings.length} inserted bookings`);
-
+        
+        const reviews = await createReviewsForBookings();
         for(const review of reviews) {
             await sequelize.query(
-                `INSERT INTO review (ID, email, date, clientID, customer_name, phone, subject,
-                    comment, archived) VALUES (:ID, :email, :date, :clientID, :customer_name,
+                `INSERT INTO review (email, date, clientID, customer_name, phone, subject,
+                    comment, archived) VALUES (:email, :date, :clientID, :customer_name,
                     :phone, :subject, :comment, :archived)`,
                 { replacements: review as { [key: string]: any }}
             );
@@ -108,8 +114,8 @@ export async function seed() {
         for(const employee of loadedEmployees) {
             console.log('employee trying to insert' + employee);
             await sequelize.query(
-                `INSERT INTO employee (DNI, name, email, password, job_functions, registration_date, phone,
-                    schelude, status) VALUES (:DNI, :name, :email, :password, :job_functions, :registration_date,
+                `INSERT INTO employee (name, email, password, job_functions, registration_date, phone,
+                    schelude, status) VALUES (:name, :email, :password, :job_functions, :registration_date,
                     :phone, :schelude, :status)`,
                 { replacements: employee as { [key: string]: any }}
             );

@@ -9,13 +9,13 @@ export default class BookingValidator {
         if (!booking || typeof booking !== 'object') {
             this.errors.push("Invalid object booking");
         }
-        if ('_id' in booking && typeof booking._id !== 'string') {
+        if ('ID' in booking && typeof booking.ID !== 'string') {
             this.errors.push("Invalid booking ID");
         }
-        if (!('room_id' in booking) || typeof booking.room_id !== 'string') {
+        if (!('roomID' in booking) || typeof booking.roomID !== 'string') {
             this.errors.push("Missing or Invalid room ID");
         }
-        if (!('client_id' in booking) || typeof booking.client_id !== 'string') {
+        if (!('clientID' in booking) || typeof booking.clientID !== 'string') {
             this.errors.push("Missing or Invalid booking client id");
         }
         if ('client_name' in booking && typeof booking.client_name !== 'string') {

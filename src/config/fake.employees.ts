@@ -1,13 +1,11 @@
 import { faker } from "@faker-js/faker";
 import { Employee } from "../interfaces/Employee";
 import bcrypt from 'bcryptjs';
-import { reviews } from "./fake.reviews";
 
 export async function createRandomEmployee(): Promise<Employee> {
     const password = faker.internet.password();
     const hashedPassword = await bcrypt.hash(password, 10);
     const employee = {
-        DNI: faker.string.uuid(),
         name: faker.person.fullName(),
         email: faker.internet.email(),
         password: hashedPassword,

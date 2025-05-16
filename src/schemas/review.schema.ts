@@ -4,7 +4,7 @@ import { Review } from '../interfaces/Review';
 const ReviewSchema = new Schema<Review>({
     email: {type: String, required: true},
     date: {type: Date, required: true},
-    customer_id: {type: String, required: true},
+    clientID: {type: String, required: true},
     customer_name: {type: String, required: true},
     phone: {type: String, required: true},
     subject: {type: String, required: true},

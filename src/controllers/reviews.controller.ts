@@ -46,7 +46,7 @@ export const updateReviewController = (req: Request, res: Response): void => {
 
     const validatedReview = ReviewValidator.validateReview(updatedReview);
 
-    if (!validatedReview || validatedReview._id !== req.params.id) {
+    if (!validatedReview || validatedReview.ID !== req.params.id) {
         res.status(400).json({ message: ReviewValidator.getErrors().join('; ') });
         return;
     }

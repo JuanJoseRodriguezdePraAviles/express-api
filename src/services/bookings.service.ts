@@ -20,14 +20,15 @@ export const createBooking = async (newBooking: Partial<Booking>): Promise<Booki
     }
     const [results] = await sequelize.query(
         `INSERT INTO booking (
-            roomID, clientID, client_name, client_email, client_phone,
+            ID, roomID, clientID, client_name, client_email, client_phone,
             order_date, check_in_date, check_out_date, status, special_request
         ) VALUES (
-            :roomID, :clientID, :client_name, :client_email, :client_phone,
+            :ID, :roomID, :clientID, :client_name, :client_email, :client_phone,
             :order_date, :check_in_date, :check_out_date, :status, :special_request
-        ) RETURNING *`,
+        )`,
          {
             replacements: {
+                ID: newBooking.ID,
                 roomID: newBooking.roomID,
                 clientID: newBooking.clientID,
                 client_name: newBooking.client_name || null,
@@ -55,7 +56,7 @@ export const updateBooking = async (id: string, updateBooking: Partial<Booking>)
     });
 
     const [results] = await sequelize.query(
-        `UPDATE booking SET ${setClause} WHERE id = :id RETURNING *`,
+        `UPDATE booking SET ${setClause} WHERE ID = :id`,
         { replacements }
     );
     return (results as Booking[])[0] || null;
