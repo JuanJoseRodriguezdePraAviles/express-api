@@ -1,0 +1,57 @@
+DROP TABLE review;
+DROP TABLE booking;
+DROP TABLE room, employee;
+CREATE TABLE IF NOT EXISTS room (
+	id VARCHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+    roomName VARCHAR(40) NOT NULL,
+    roomType ENUM('Single Bed', 'Double Bed', 'Double Superior', 'Suite'),
+    roomFloor VARCHAR(5),
+    status ENUM('Booked', 'Available'),
+    description VARCHAR(1000),
+    photos VARCHAR(1000),
+    offer BOOLEAN,
+    price INT,
+    discount INT,
+    cancellationPolicy VARCHAR(1000),
+    roomAmenities ENUM('3 Bed Space', '24 Hours Guard', 'Free Wifi', '2 Bathroom', 'Air Conditioner', 'Television')
+);
+
+CREATE TABLE IF NOT EXISTS booking (
+	id VARCHAR(36) NOT NULL PRIMARY KEY DEFAULT(UUID()),
+    roomId VARCHAR(40) NOT NULL,
+    FOREIGN KEY (roomId) REFERENCES room(id),
+    clientId VARCHAR(40) NOT NULL,
+    clientName VARCHAR(100),
+    clientEmail VARCHAR(100),
+    clientPhone VARCHAR(40),
+    orderDate DATE,
+    checkInDate DATE,
+    checkOutDate DATE,
+    status ENUM('Check In', 'Check Out', 'In Progress'),
+    specialRequest VARCHAR(1000)
+);
+
+CREATE TABLE IF NOT EXISTS review (
+	id VARCHAR(36) NOT NULL PRIMARY KEY DEFAULT(UUID()),
+    email VARCHAR(40) NOT NULL,
+    date DATE NOT NULL,
+    customerName VARCHAR(50) NOT NULL,
+    phone VARCHAR(40) NOT NULL,
+    subject VARCHAR(40) NOT NULL,
+    comment VARCHAR(1000) NOT NULL,
+    archived BOOLEAN NOT NULL,
+    clientId VARCHAR(40) NOT NULL,
+    FOREIGN KEY (clientId) REFERENCES booking(id)
+);
+
+CREATE TABLE IF NOT EXISTS employee (
+	dni VARCHAR(36) NOT NULL PRIMARY KEY DEFAULT(UUID()),
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    jobFunctions VARCHAR(1000),
+    registrationDate DATE,
+    phone VARCHAR(40),
+    schelude VARCHAR(100),
+    status BOOLEAN
+);
