@@ -24,7 +24,7 @@ jobs:
     - name: Run build
       run: npm run build
     - name: install serverless
-      run: npm install -g serverless
+      run: npm install -g serverless@3.40.0
     - name: run serverless
       run: serverless deploy
       env:
