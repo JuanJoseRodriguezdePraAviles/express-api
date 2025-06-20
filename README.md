@@ -9,3 +9,5 @@ body
     username: value,
     password: value
 }
+
+GET /bookings
