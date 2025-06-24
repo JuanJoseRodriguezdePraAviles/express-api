@@ -7,7 +7,8 @@ import loginRouter from './routes/login.routes';
 import serverless from 'serverless-http';
 import { connectDB } from './config/database';
 import cors from 'cors';
-import { Request, Response, NextFunction } from 'express'; 
+import { Request, Response, NextFunction } from 'express';
+import { APIGatewayProxyEvent, Context } from 'aws-lambda'; 
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -56,7 +57,24 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-export const handler = serverless(app);
+export const handler = serverless(app, {
+  request: (req: Request & { event?: APIGatewayProxyEvent; context?: Context }, event: APIGatewayProxyEvent, context: Context) => {
+    req.event = event;
+    req.context = context;
+  },
+  response: {
+    onError: (error: any, request: Request, response: Response) => {
+      console.error("Error capturado en onError:", error);
+
+      response.setHeader('Content-Type', 'application/json');
+      response.statusCode = 500;
+      response.end(JSON.stringify({
+        message: "Internal Server Error",
+        error: error.message || JSON.stringify(error),
+      }));
+    }
+  }
+});
 
 if(process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
