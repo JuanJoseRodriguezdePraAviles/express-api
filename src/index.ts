@@ -6,7 +6,8 @@ import employeesRouter from './routes/employees.routes';
 import loginRouter from './routes/login.routes';
 import serverless from 'serverless-http';
 import { connectDB } from './config/database';
-import cors from 'cors'; 
+import cors from 'cors';
+import { Request, Response, NextFunction } from 'express'; 
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -40,6 +41,15 @@ app.use("/api/v1/reviews", reviewsRouter);
 app.use("/api/v1/employees", employeesRouter);
 app.use("/api/v1/login", loginRouter);
 
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.error("Unhandled error:", err);
+
+  res.status(500).json({
+    message: "Internal Server Error",
+    error: err.message,
+  });
+});
+
 export const handler = serverless(app);
 
 if(process.env.NODE_ENV !== 'production') {
@@ -47,3 +57,4 @@ if(process.env.NODE_ENV !== 'production') {
         console.log(`Server running at http://:localhost:${PORT}`);
     });
 }
+
