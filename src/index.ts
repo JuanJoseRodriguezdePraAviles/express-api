@@ -40,6 +40,9 @@ app.use("/api/v1/bookings", bookingsRouter);
 app.use("/api/v1/reviews", reviewsRouter);
 app.use("/api/v1/employees", employeesRouter);
 app.use("/api/v1/login", loginRouter);
+app.get("/api/v1/test-error", (req, res) => {
+  throw new Error("Fallo controlado");
+});
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error("Unhandled error:", err);
