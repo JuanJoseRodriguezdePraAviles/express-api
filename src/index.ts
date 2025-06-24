@@ -44,9 +44,12 @@ app.get("/api/v1/test-error", (req, res) => {
   throw new Error("Fallo controlado");
 });
 
+
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error("Unhandled error:", err);
-
+    
+  res.setHeader('Content-Type', 'application/json');
+  console.error("ERR COMPLETO:", err);
   res.status(500).json({
     message: "Internal Server Error",
     error: err?.message || JSON.stringify(err) || "Unknown error"
