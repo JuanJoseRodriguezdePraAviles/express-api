@@ -33,3 +33,4 @@ jobs:
         AWS_REGION: eu-west-3
         DB_CONN_STRING: ${{ secrets.DB_CONN_STRING }}
         DB_NAME: ${{ secrets.DB_NAME }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
