@@ -162,7 +162,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/miranda-backend/dev/1750840652584-2025-06-25T08:37:32.584Z/miranda-backend.zip"
+          "S3Key": "serverless/miranda-backend/dev/1750842363090-2025-06-25T09:06:03.090Z/miranda-backend.zip"
         },
         "Handler": "dist/index.handler",
         "Runtime": "nodejs22.x",

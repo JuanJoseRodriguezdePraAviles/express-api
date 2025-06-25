@@ -11,7 +11,10 @@ package:
 provider:
   name: aws
   region: eu-west-3
-  runtime: nodejs22.x
+  runtime: nodejs20.x
+  environment:
+    DB_CONN_STRING: ${env:DB_CONN_STRING}
+    DB_NAME: ${env:DB_NAME}
   httpApi:
     cors:
       allowedOrigins:
@@ -26,9 +29,7 @@ provider:
         - Content-Type
         - Authorization
       allowCredentials: true
-  environment:
-    DB_CONN_STRING: ${env:DB_CONN_STRING}
-    DB_NAME: ${env:DB_NAME}
+    
 functions:
   app:
     handler: dist/index.handler
