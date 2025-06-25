@@ -41,40 +41,8 @@ app.use("/api/v1/bookings", bookingsRouter);
 app.use("/api/v1/reviews", reviewsRouter);
 app.use("/api/v1/employees", employeesRouter);
 app.use("/api/v1/login", loginRouter);
-app.get("/api/v1/test-error", (req, res) => {
-  throw new Error("Fallo controlado");
-});
 
-
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error("Unhandled error:", err);
-    
-  res.setHeader('Content-Type', 'application/json');
-  console.error("ERR COMPLETO:", err);
-  res.status(500).json({
-    message: "Internal Server Error",
-    error: err?.message || JSON.stringify(err) || "Unknown error"
-  });
-});
-
-export const handler = serverless(app, {
-  request: (req: Request & { event?: APIGatewayProxyEvent; context?: Context }, event: APIGatewayProxyEvent, context: Context) => {
-    req.event = event;
-    req.context = context;
-  },
-  response: {
-    onError: (error: any, request: Request, response: Response) => {
-      console.error("Error capturado en onError:", error);
-
-      response.setHeader('Content-Type', 'application/json');
-      response.statusCode = 500;
-      response.end(JSON.stringify({
-        message: "Internal Server Error",
-        error: error.message || JSON.stringify(error),
-      }));
-    }
-  }
-});
+export const handler = serverless(app);
 
 if(process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
