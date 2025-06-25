@@ -162,13 +162,19 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/miranda-backend/dev/1750842363090-2025-06-25T09:06:03.090Z/miranda-backend.zip"
+          "S3Key": "serverless/miranda-backend/dev/1750844854232-2025-06-25T09:47:34.232Z/miranda-backend.zip"
         },
         "Handler": "dist/index.handler",
-        "Runtime": "nodejs22.x",
+        "Runtime": "nodejs20.x",
         "FunctionName": "miranda-backend-dev-app",
         "MemorySize": 1024,
         "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "DB_CONN_STRING": "mongodb+srv://root:root@hotel.h6gckij.mongodb.net/",
+            "DB_NAME": "hotel"
+          }
+        },
         "Role": {
           "Fn::GetAtt": [
             "IamRoleLambdaExecution",
@@ -180,14 +186,14 @@
         "AppLogGroup"
       ]
     },
-    "AppLambdaVersionAgz5o8JwUSMoXLmnZXgSim7UbH8aS4QYFUMkXpnYv8": {
+    "AppLambdaVersionLz05pCzFKViOcRTOhNXpRrAERocemERXjEWiKkp9nig": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "dzs+9FaO1A4yLOOQomAEgY589yUp3U161/YDvOCAAT8="
+        "CodeSha256": "Td7O8J9FMadgQFSwDzgodvOnX4QteH8tKFdDfVx5DwA="
       }
     },
     "HttpApi": {
@@ -336,7 +342,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionAgz5o8JwUSMoXLmnZXgSim7UbH8aS4QYFUMkXpnYv8"
+        "Ref": "AppLambdaVersionLz05pCzFKViOcRTOhNXpRrAERocemERXjEWiKkp9nig"
       },
       "Export": {
         "Name": "sls-miranda-backend-dev-AppLambdaFunctionQualifiedArn"
